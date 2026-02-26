@@ -1,0 +1,166 @@
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
+const Auth = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [userType, setUserType] = useState<"player" | "club">("player");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (user) navigate("/dashboard");
+  }, [user, navigate]);
+
+  useEffect(() => {
+    const type = searchParams.get("type");
+    if (type === "club") setUserType("club");
+    const mode = searchParams.get("mode");
+    if (mode === "register") setIsLogin(false);
+  }, [searchParams]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success("¡Bienvenido de vuelta!");
+        navigate("/dashboard");
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName, user_type: userType },
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (error) throw error;
+        toast.success("¡Cuenta creada! Revisá tu email para confirmar.");
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-navy flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <a href="/" className="block text-center mb-8">
+          <span className="text-4xl font-display text-primary-foreground">
+            PASE<span className="text-gradient-lime">GOL</span>
+          </span>
+        </a>
+
+        <div className="bg-card rounded-2xl p-8 shadow-card">
+          <h2 className="text-2xl font-display text-foreground mb-6 text-center">
+            {isLogin ? "INICIAR SESIÓN" : "CREAR CUENTA"}
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Nombre completo</label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-lime focus:border-transparent outline-none"
+                    placeholder="Tu nombre"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Tipo de cuenta</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setUserType("player")}
+                      className={`py-3 rounded-xl text-sm font-semibold transition-all ${
+                        userType === "player"
+                          ? "bg-cta-gradient text-navy"
+                          : "border border-border text-muted-foreground hover:border-lime/50"
+                      }`}
+                    >
+                      🏃 Jugador / Padre
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUserType("club")}
+                      className={`py-3 rounded-xl text-sm font-semibold transition-all ${
+                        userType === "club"
+                          ? "bg-cta-gradient text-navy"
+                          : "border border-border text-muted-foreground hover:border-lime/50"
+                      }`}
+                    >
+                      🏟️ Club / Scout
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-lime focus:border-transparent outline-none"
+                placeholder="tu@email.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-muted-foreground mb-1">Contraseña</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground focus:ring-2 focus:ring-lime focus:border-transparent outline-none"
+                placeholder="Mínimo 6 caracteres"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 rounded-xl bg-cta-gradient text-navy font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+              {loading ? "Cargando..." : isLogin ? "Entrar" : "Crear Cuenta"}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground mt-6">
+            {isLogin ? "¿No tenés cuenta?" : "¿Ya tenés cuenta?"}{" "}
+            <button
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-lime font-semibold hover:underline"
+            >
+              {isLogin ? "Crear cuenta" : "Iniciar sesión"}
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Auth;

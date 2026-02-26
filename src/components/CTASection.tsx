@@ -18,13 +18,13 @@ const CTASection = () => {
             No dejes que el talento pase desapercibido. Crea un perfil gratuito hoy y abre las puertas al futuro deportivo.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="group px-8 py-4 rounded-xl bg-cta-gradient text-navy font-bold text-lg hover:opacity-90 transition-all animate-pulse-glow flex items-center justify-center gap-2">
+            <a href="/auth?mode=register" className="group px-8 py-4 rounded-xl bg-cta-gradient text-navy font-bold text-lg hover:opacity-90 transition-all animate-pulse-glow flex items-center justify-center gap-2">
               Crear Perfil Gratis
               <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="px-8 py-4 rounded-xl border-2 border-gold/30 text-gold font-semibold text-lg hover:border-gold/50 hover:bg-gold/5 transition-all">
+            </a>
+            <a href="/auth?mode=register&type=club" className="px-8 py-4 rounded-xl border-2 border-gold/30 text-gold font-semibold text-lg hover:border-gold/50 hover:bg-gold/5 transition-all">
               Soy Club / Buscatalento
-            </button>
+            </a>
           </div>
         </div>
       </div>
