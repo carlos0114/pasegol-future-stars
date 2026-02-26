@@ -24,9 +24,9 @@ const Navbar = () => {
           <a href="#clubes" className="text-sm font-medium text-primary-foreground/70 hover:text-primary-foreground transition-colors">
             Para Clubes
           </a>
-          <button className="px-5 py-2 rounded-lg bg-cta-gradient text-navy font-semibold text-sm hover:opacity-90 transition-opacity">
+          <a href="/auth?mode=register" className="px-5 py-2 rounded-lg bg-cta-gradient text-navy font-semibold text-sm hover:opacity-90 transition-opacity">
             Crear Perfil Gratis
-          </button>
+          </a>
         </div>
 
         {/* Mobile toggle */}
@@ -44,9 +44,9 @@ const Navbar = () => {
           <a href="#como-funciona" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground">Cómo Funciona</a>
           <a href="#beneficios" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground">Beneficios</a>
           <a href="#clubes" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground">Para Clubes</a>
-          <button className="w-full px-5 py-2 rounded-lg bg-cta-gradient text-navy font-semibold text-sm">
+          <a href="/auth?mode=register" className="block w-full px-5 py-2 rounded-lg bg-cta-gradient text-navy font-semibold text-sm text-center">
             Crear Perfil Gratis
-          </button>
+          </a>
         </div>
       )}
     </nav>
