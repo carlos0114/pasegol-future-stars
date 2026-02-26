@@ -15,6 +15,7 @@ interface Player {
   weight: string | null;
   club: string | null;
   video_url: string | null;
+  photo_url: string | null;
   profile_id: string;
 }
 
@@ -26,7 +27,9 @@ const PlayerProfile = () => {
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (id) fetchPlayer();
@@ -41,6 +44,57 @@ const PlayerProfile = () => {
   const getVideoPublicUrl = (path: string) => {
     const { data } = supabase.storage.from("player-videos").getPublicUrl(path);
     return data.publicUrl;
+  };
+
+  const getPhotoPublicUrl = (path: string) => {
+    const { data } = supabase.storage.from("player-photos").getPublicUrl(path);
+    return data.publicUrl;
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user || !player) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Solo se permiten archivos de imagen");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("La imagen no puede superar los 5MB");
+      return;
+    }
+
+    setUploadingPhoto(true);
+    const fileExt = file.name.split(".").pop();
+    const filePath = `${user.id}/${player.id}.${fileExt}`;
+
+    if (player.photo_url) {
+      await supabase.storage.from("player-photos").remove([player.photo_url]);
+    }
+
+    const { error: uploadError } = await supabase.storage
+      .from("player-photos")
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      toast.error("Error al subir la foto: " + uploadError.message);
+      setUploadingPhoto(false);
+      return;
+    }
+
+    const { error: updateError } = await supabase
+      .from("players")
+      .update({ photo_url: filePath })
+      .eq("id", player.id);
+
+    if (updateError) {
+      toast.error("Error al guardar la foto");
+    } else {
+      toast.success("¡Foto subida con éxito!");
+      setPlayer({ ...player, photo_url: filePath });
+    }
+    setUploadingPhoto(false);
   };
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,8 +194,38 @@ const PlayerProfile = () => {
       <div className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="rounded-2xl overflow-hidden bg-card border border-border shadow-card">
           <div className="bg-hero-gradient p-8 relative">
-            <div className="w-20 h-20 rounded-full bg-navy-light border-2 border-lime/30 flex items-center justify-center text-3xl font-display text-lime">
-              {player.name.split(" ").map((n) => n[0]).join("")}
+            <div className="relative group">
+              {player.photo_url ? (
+                <img
+                  src={getPhotoPublicUrl(player.photo_url)}
+                  alt={player.name}
+                  className="w-20 h-20 rounded-full object-cover border-2 border-lime/30"
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-full bg-navy-light border-2 border-lime/30 flex items-center justify-center text-3xl font-display text-lime">
+                  {player.name.split(" ").map((n) => n[0]).join("")}
+                </div>
+              )}
+              {isOwner && (
+                <button
+                  onClick={() => photoInputRef.current?.click()}
+                  disabled={uploadingPhoto}
+                  className="absolute inset-0 w-20 h-20 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                >
+                  {uploadingPhoto ? (
+                    <Loader2 size={20} className="animate-spin text-white" />
+                  ) : (
+                    <Upload size={20} className="text-white" />
+                  )}
+                </button>
+              )}
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="hidden"
+              />
             </div>
             <div className="mt-4">
               <h1 className="text-2xl font-bold text-primary-foreground font-body">{player.name}</h1>
