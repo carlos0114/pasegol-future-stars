@@ -12,6 +12,7 @@ interface Player {
   height: string | null;
   weight: string | null;
   club: string | null;
+  photo_url: string | null;
 }
 
 const Explore = () => {
@@ -88,9 +89,17 @@ const Explore = () => {
             {filtered.map((p) => (
               <div key={p.id} className="rounded-2xl overflow-hidden bg-card border border-border shadow-card hover:shadow-card-hover transition-all duration-300">
                 <div className="bg-hero-gradient p-6 relative">
-                  <div className="w-14 h-14 rounded-full bg-navy-light border-2 border-lime/30 flex items-center justify-center text-xl font-display text-lime">
-                    {p.name.split(" ").map((n) => n[0]).join("")}
-                  </div>
+                  {p.photo_url ? (
+                    <img
+                      src={supabase.storage.from("player-photos").getPublicUrl(p.photo_url).data.publicUrl}
+                      alt={p.name}
+                      className="w-14 h-14 rounded-full object-cover border-2 border-lime/30"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded-full bg-navy-light border-2 border-lime/30 flex items-center justify-center text-xl font-display text-lime">
+                      {p.name.split(" ").map((n) => n[0]).join("")}
+                    </div>
+                  )}
                   <div className="mt-3">
                     <h3 className="text-lg font-bold text-primary-foreground font-body">{p.name}</h3>
                     <span className="inline-block mt-1 px-3 py-0.5 rounded-full bg-lime/20 text-lime text-xs font-semibold">

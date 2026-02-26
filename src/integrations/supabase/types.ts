@@ -65,6 +65,7 @@ export type Database = {
           height: string | null
           id: string
           name: string
+          photo_url: string | null
           position: string
           profile_id: string
           updated_at: string
@@ -79,6 +80,7 @@ export type Database = {
           height?: string | null
           id?: string
           name: string
+          photo_url?: string | null
           position: string
           profile_id: string
           updated_at?: string
@@ -93,6 +95,7 @@ export type Database = {
           height?: string | null
           id?: string
           name?: string
+          photo_url?: string | null
           position?: string
           profile_id?: string
           updated_at?: string
