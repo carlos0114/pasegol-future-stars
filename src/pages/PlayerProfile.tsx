@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { MapPin, Ruler, Weight, ArrowLeft, Send } from "lucide-react";
+import { MapPin, Ruler, Weight, ArrowLeft, Send, Upload, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface Player {
@@ -25,6 +25,8 @@ const PlayerProfile = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (id) fetchPlayer();
@@ -34,6 +36,70 @@ const PlayerProfile = () => {
     const { data } = await supabase.from("players").select("*").eq("id", id!).single();
     if (data) setPlayer(data);
     setLoading(false);
+  };
+
+  const getVideoPublicUrl = (path: string) => {
+    const { data } = supabase.storage.from("player-videos").getPublicUrl(path);
+    return data.publicUrl;
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user || !player) return;
+
+    if (!file.type.startsWith("video/")) {
+      toast.error("Solo se permiten archivos de video");
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error("El video no puede superar los 50MB");
+      return;
+    }
+
+    setUploading(true);
+    const fileExt = file.name.split(".").pop();
+    const filePath = `${user.id}/${player.id}.${fileExt}`;
+
+    // Delete old video if exists
+    if (player.video_url) {
+      await supabase.storage.from("player-videos").remove([player.video_url]);
+    }
+
+    const { error: uploadError } = await supabase.storage
+      .from("player-videos")
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      toast.error("Error al subir el video: " + uploadError.message);
+      setUploading(false);
+      return;
+    }
+
+    const { error: updateError } = await supabase
+      .from("players")
+      .update({ video_url: filePath })
+      .eq("id", player.id);
+
+    if (updateError) {
+      toast.error("Error al guardar la referencia del video");
+    } else {
+      toast.success("¡Video subido con éxito!");
+      setPlayer({ ...player, video_url: filePath });
+    }
+    setUploading(false);
+  };
+
+  const handleDeleteVideo = async () => {
+    if (!player?.video_url || !user) return;
+    setUploading(true);
+
+    await supabase.storage.from("player-videos").remove([player.video_url]);
+    await supabase.from("players").update({ video_url: null }).eq("id", player.id);
+
+    setPlayer({ ...player, video_url: null });
+    toast.success("Video eliminado");
+    setUploading(false);
   };
 
   const sendContactRequest = async () => {
@@ -72,7 +138,6 @@ const PlayerProfile = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8 max-w-2xl">
-        {/* Player card */}
         <div className="rounded-2xl overflow-hidden bg-card border border-border shadow-card">
           <div className="bg-hero-gradient p-8 relative">
             <div className="w-20 h-20 rounded-full bg-navy-light border-2 border-lime/30 flex items-center justify-center text-3xl font-display text-lime">
@@ -103,14 +168,72 @@ const PlayerProfile = () => {
               <div className="text-foreground font-medium">{player.club}</div>
             )}
 
-            {/* Video placeholder */}
-            <div className="mt-6 aspect-video rounded-xl bg-muted flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-lime/20 flex items-center justify-center mx-auto mb-2">
-                  <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-lime border-b-[10px] border-b-transparent ml-1" />
+            {/* Video section */}
+            <div className="mt-6">
+              {player.video_url ? (
+                <div className="space-y-3">
+                  <video
+                    src={getVideoPublicUrl(player.video_url)}
+                    controls
+                    className="w-full aspect-video rounded-xl bg-muted object-cover"
+                  />
+                  {isOwner && (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                        className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+                      >
+                        {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                        Cambiar video
+                      </button>
+                      <button
+                        onClick={handleDeleteVideo}
+                        disabled={uploading}
+                        className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-destructive/30 text-destructive text-sm hover:bg-destructive/10 transition-colors disabled:opacity-50"
+                      >
+                        <Trash2 size={14} /> Eliminar
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <p className="text-muted-foreground text-sm">Video próximamente</p>
-              </div>
+              ) : (
+                <div className="aspect-video rounded-xl bg-muted flex items-center justify-center">
+                  {isOwner ? (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="flex flex-col items-center gap-3 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {uploading ? (
+                        <Loader2 size={32} className="animate-spin text-lime" />
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-lime/20 flex items-center justify-center">
+                          <Upload size={24} className="text-lime" />
+                        </div>
+                      )}
+                      <span className="text-sm font-medium">
+                        {uploading ? "Subiendo video..." : "Subir video del jugador"}
+                      </span>
+                      <span className="text-xs text-muted-foreground">Máximo 50MB • MP4, MOV, WebM</span>
+                    </button>
+                  ) : (
+                    <div className="text-center">
+                      <div className="w-16 h-16 rounded-full bg-lime/20 flex items-center justify-center mx-auto mb-2">
+                        <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-lime border-b-[10px] border-b-transparent ml-1" />
+                      </div>
+                      <p className="text-muted-foreground text-sm">Sin video disponible</p>
+                    </div>
+                  )}
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="video/*"
+                onChange={handleVideoUpload}
+                className="hidden"
+              />
             </div>
           </div>
         </div>
