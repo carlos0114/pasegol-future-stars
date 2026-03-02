@@ -360,7 +360,7 @@ const PlayerProfile = () => {
               {player.video_url ? (
                 <div className="space-y-3">
                   <video src={getVideoPublicUrl(player.video_url)} controls
-                    className="w-full aspect-video rounded-xl bg-muted object-cover" />
+                    className="w-full rounded-xl bg-muted object-contain" />
                   {isOwner && (
                     <div className="flex gap-2">
                       <button onClick={() => fileInputRef.current?.click()} disabled={uploading}
