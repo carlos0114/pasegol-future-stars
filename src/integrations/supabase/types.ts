@@ -58,49 +58,91 @@ export type Database = {
       }
       players: {
         Row: {
+          achievements: string | null
           age: number
+          birth_year: number | null
+          category: string | null
           city: string | null
           club: string | null
           created_at: string
+          endurance: number | null
+          finishing: number | null
+          game_vision: number | null
           height: string | null
           id: string
           name: string
+          parent_email: string | null
+          parent_name: string | null
+          parent_phone: string | null
           photo_url: string | null
           position: string
+          preferred_foot: string | null
           profile_id: string
+          secondary_position: string | null
+          speed: number | null
+          technique: number | null
           updated_at: string
           video_url: string | null
           weight: string | null
+          years_playing: number | null
         }
         Insert: {
+          achievements?: string | null
           age: number
+          birth_year?: number | null
+          category?: string | null
           city?: string | null
           club?: string | null
           created_at?: string
+          endurance?: number | null
+          finishing?: number | null
+          game_vision?: number | null
           height?: string | null
           id?: string
           name: string
+          parent_email?: string | null
+          parent_name?: string | null
+          parent_phone?: string | null
           photo_url?: string | null
           position: string
+          preferred_foot?: string | null
           profile_id: string
+          secondary_position?: string | null
+          speed?: number | null
+          technique?: number | null
           updated_at?: string
           video_url?: string | null
           weight?: string | null
+          years_playing?: number | null
         }
         Update: {
+          achievements?: string | null
           age?: number
+          birth_year?: number | null
+          category?: string | null
           city?: string | null
           club?: string | null
           created_at?: string
+          endurance?: number | null
+          finishing?: number | null
+          game_vision?: number | null
           height?: string | null
           id?: string
           name?: string
+          parent_email?: string | null
+          parent_name?: string | null
+          parent_phone?: string | null
           photo_url?: string | null
           position?: string
+          preferred_foot?: string | null
           profile_id?: string
+          secondary_position?: string | null
+          speed?: number | null
+          technique?: number | null
           updated_at?: string
           video_url?: string | null
           weight?: string | null
+          years_playing?: number | null
         }
         Relationships: [
           {
