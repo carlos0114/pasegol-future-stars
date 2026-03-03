@@ -28,6 +28,8 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/crear-jugador" element={<CreatePlayer />} />
+            <Route path="/perfil-club" element={<CreateClubProfile />} />
+            <Route path="/perfil-scout" element={<CreateScoutProfile />} />
             <Route path="/jugador/:id" element={<PlayerProfile />} />
             <Route path="/explorar" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
