@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loadingPlayers, setLoadingPlayers] = useState(true);
   const [profile, setProfile] = useState<{ full_name: string; user_type: string } | null>(null);
+  const [hasClubProfile, setHasClubProfile] = useState(false);
+  const [hasScoutProfile, setHasScoutProfile] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
