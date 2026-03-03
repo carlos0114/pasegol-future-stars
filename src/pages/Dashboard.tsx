@@ -85,29 +85,44 @@ const Dashboard = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-display text-foreground">MI PANEL</h1>
             <p className="text-muted-foreground text-sm">
-              {profile?.user_type === "club" ? "Explorá jugadores y contactá familias" : "Administrá los perfiles de tus jugadores"}
+              {profile?.user_type === "club"
+                ? "Gestioná tu club y explorá jugadores"
+                : profile?.user_type === "player"
+                ? "Administrá los perfiles de tus jugadores"
+                : "Buscá talentos y gestioná tu perfil profesional"}
             </p>
           </div>
-          {profile?.user_type !== "club" && (
-            <Link
-              to="/crear-jugador"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity"
-            >
-              <Plus size={18} /> Agregar Jugador
-            </Link>
-          )}
-          {profile?.user_type === "club" && (
-            <Link
-              to="/explorar"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity"
-            >
-              Explorar Jugadores
-            </Link>
-          )}
+          <div className="flex flex-wrap gap-3">
+            {profile?.user_type === "player" && (
+              <Link to="/crear-jugador" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity">
+                <Plus size={18} /> Agregar Jugador
+              </Link>
+            )}
+            {profile?.user_type === "club" && (
+              <>
+                <Link to="/perfil-club" className="flex items-center gap-2 px-5 py-3 rounded-xl border border-border text-foreground font-semibold hover:border-lime/50 transition-colors">
+                  <Building2 size={18} /> {hasClubProfile ? "Editar Perfil Club" : "Crear Perfil Club"}
+                </Link>
+                <Link to="/explorar" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity">
+                  Explorar Jugadores
+                </Link>
+              </>
+            )}
+            {profile?.user_type !== "club" && profile?.user_type !== "player" && (
+              <>
+                <Link to="/perfil-scout" className="flex items-center gap-2 px-5 py-3 rounded-xl border border-border text-foreground font-semibold hover:border-lime/50 transition-colors">
+                  <UserSearch size={18} /> {hasScoutProfile ? "Editar Perfil Scout" : "Crear Perfil Scout"}
+                </Link>
+                <Link to="/explorar" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity">
+                  Explorar Jugadores
+                </Link>
+              </>
+            )}
+          </div>
         </div>
 
         {loadingPlayers ? (
