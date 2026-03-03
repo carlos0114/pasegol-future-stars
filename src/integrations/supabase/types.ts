@@ -14,6 +14,156 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          profile_id: string
+          target_id: string | null
+          target_type: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          profile_id: string
+          target_id?: string | null
+          target_type: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          profile_id?: string
+          target_id?: string | null
+          target_type?: string
+        }
+        Relationships: []
+      }
+      club_scouts: {
+        Row: {
+          club_id: string
+          id: string
+          joined_at: string
+          role: string | null
+          scout_id: string
+        }
+        Insert: {
+          club_id: string
+          id?: string
+          joined_at?: string
+          role?: string | null
+          scout_id: string
+        }
+        Update: {
+          club_id?: string
+          id?: string
+          joined_at?: string
+          role?: string | null
+          scout_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_scouts_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_scouts_scout_id_fkey"
+            columns: ["scout_id"]
+            isOneToOne: false
+            referencedRelation: "scouts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clubs: {
+        Row: {
+          address: string | null
+          categories: string[] | null
+          city: string | null
+          club_type: string | null
+          competitive_level: string | null
+          contact_person: string | null
+          contact_role: string | null
+          country: string
+          created_at: string
+          founded_year: number | null
+          id: string
+          institutional_email: string | null
+          league: string | null
+          logo_url: string | null
+          official_name: string
+          phone: string | null
+          profile_id: string
+          social_facebook: string | null
+          social_instagram: string | null
+          social_twitter: string | null
+          updated_at: string
+          verification_doc_url: string | null
+          verification_status: string
+          website: string | null
+        }
+        Insert: {
+          address?: string | null
+          categories?: string[] | null
+          city?: string | null
+          club_type?: string | null
+          competitive_level?: string | null
+          contact_person?: string | null
+          contact_role?: string | null
+          country?: string
+          created_at?: string
+          founded_year?: number | null
+          id?: string
+          institutional_email?: string | null
+          league?: string | null
+          logo_url?: string | null
+          official_name: string
+          phone?: string | null
+          profile_id: string
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_twitter?: string | null
+          updated_at?: string
+          verification_doc_url?: string | null
+          verification_status?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string | null
+          categories?: string[] | null
+          city?: string | null
+          club_type?: string | null
+          competitive_level?: string | null
+          contact_person?: string | null
+          contact_role?: string | null
+          country?: string
+          created_at?: string
+          founded_year?: number | null
+          id?: string
+          institutional_email?: string | null
+          league?: string | null
+          logo_url?: string | null
+          official_name?: string
+          phone?: string | null
+          profile_id?: string
+          social_facebook?: string | null
+          social_instagram?: string | null
+          social_twitter?: string | null
+          updated_at?: string
+          verification_doc_url?: string | null
+          verification_status?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       contact_requests: {
         Row: {
           created_at: string
@@ -52,6 +202,38 @@ export type Database = {
             columns: ["sender_profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          player_id: string
+          profile_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          player_id: string
+          profile_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          player_id?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
             referencedColumns: ["id"]
           },
         ]
@@ -178,6 +360,75 @@ export type Database = {
           id?: string
           updated_at?: string
           user_type?: string
+        }
+        Relationships: []
+      }
+      scouts: {
+        Row: {
+          account_status: string
+          city: string | null
+          country: string
+          created_at: string
+          full_name: string
+          id: string
+          photo_url: string | null
+          player_type_sought: string | null
+          previous_clubs: string[] | null
+          professional_id: string | null
+          profile_id: string
+          references_info: string | null
+          target_age_max: number | null
+          target_age_min: number | null
+          target_countries: string[] | null
+          target_positions: string[] | null
+          updated_at: string
+          verification_doc_url: string | null
+          verification_status: string
+          years_experience: number | null
+        }
+        Insert: {
+          account_status?: string
+          city?: string | null
+          country?: string
+          created_at?: string
+          full_name: string
+          id?: string
+          photo_url?: string | null
+          player_type_sought?: string | null
+          previous_clubs?: string[] | null
+          professional_id?: string | null
+          profile_id: string
+          references_info?: string | null
+          target_age_max?: number | null
+          target_age_min?: number | null
+          target_countries?: string[] | null
+          target_positions?: string[] | null
+          updated_at?: string
+          verification_doc_url?: string | null
+          verification_status?: string
+          years_experience?: number | null
+        }
+        Update: {
+          account_status?: string
+          city?: string | null
+          country?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          photo_url?: string | null
+          player_type_sought?: string | null
+          previous_clubs?: string[] | null
+          professional_id?: string | null
+          profile_id?: string
+          references_info?: string | null
+          target_age_max?: number | null
+          target_age_min?: number | null
+          target_countries?: string[] | null
+          target_positions?: string[] | null
+          updated_at?: string
+          verification_doc_url?: string | null
+          verification_status?: string
+          years_experience?: number | null
         }
         Relationships: []
       }
