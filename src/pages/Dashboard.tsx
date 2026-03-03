@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Edit } from "lucide-react";
+import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Building2, UserSearch } from "lucide-react";
 import { toast } from "sonner";
 
 interface Player {
