@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import CreatePlayer from "./pages/CreatePlayer";
+import CreateClubProfile from "./pages/CreateClubProfile";
+import CreateScoutProfile from "./pages/CreateScoutProfile";
 import PlayerProfile from "./pages/PlayerProfile";
 import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
@@ -26,6 +28,8 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/crear-jugador" element={<CreatePlayer />} />
+            <Route path="/perfil-club" element={<CreateClubProfile />} />
+            <Route path="/perfil-scout" element={<CreateScoutProfile />} />
             <Route path="/jugador/:id" element={<PlayerProfile />} />
             <Route path="/explorar" element={<Explore />} />
             <Route path="*" element={<NotFound />} />
