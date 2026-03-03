@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import CreatePlayer from "./pages/CreatePlayer";
+import CreateClubProfile from "./pages/CreateClubProfile";
+import CreateScoutProfile from "./pages/CreateScoutProfile";
 import PlayerProfile from "./pages/PlayerProfile";
 import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
