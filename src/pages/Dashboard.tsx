@@ -34,6 +34,8 @@ const Dashboard = () => {
     if (user) {
       fetchProfile();
       fetchPlayers();
+      supabase.from("clubs").select("id").eq("profile_id", user.id).maybeSingle().then(({ data }) => setHasClubProfile(!!data));
+      supabase.from("scouts").select("id").eq("profile_id", user.id).maybeSingle().then(({ data }) => setHasScoutProfile(!!data));
     }
   }, [user]);
 
