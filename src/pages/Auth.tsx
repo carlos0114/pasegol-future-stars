@@ -10,7 +10,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [userType, setUserType] = useState<"player" | "club">("player");
+  const [userType, setUserType] = useState<"player" | "club" | "scout">("player");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
