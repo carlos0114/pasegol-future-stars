@@ -86,7 +86,7 @@ const Auth = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-muted-foreground mb-1">Tipo de cuenta</label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-3 gap-3">
                     <button
                       type="button"
                       onClick={() => setUserType("player")}
@@ -96,7 +96,7 @@ const Auth = () => {
                           : "border border-border text-muted-foreground hover:border-lime/50"
                       }`}
                     >
-                      🏃 Jugador / Padre
+                      ⚽ Jugador / Padre
                     </button>
                     <button
                       type="button"
@@ -107,7 +107,18 @@ const Auth = () => {
                           : "border border-border text-muted-foreground hover:border-lime/50"
                       }`}
                     >
-                      🏟️ Club / Scout
+                      🏟️ Club
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUserType("scout")}
+                      className={`py-3 rounded-xl text-sm font-semibold transition-all ${
+                        userType === "scout"
+                          ? "bg-cta-gradient text-navy"
+                          : "border border-border text-muted-foreground hover:border-lime/50"
+                      }`}
+                    >
+                      🔍 Scout
                     </button>
                   </div>
                 </div>
