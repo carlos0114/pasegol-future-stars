@@ -23,6 +23,7 @@ const Auth = () => {
   useEffect(() => {
     const type = searchParams.get("type");
     if (type === "club") setUserType("club");
+    if (type === "scout") setUserType("scout");
     const mode = searchParams.get("mode");
     if (mode === "register") setIsLogin(false);
   }, [searchParams]);
