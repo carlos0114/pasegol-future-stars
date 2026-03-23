@@ -47,9 +47,6 @@ const Navbar = () => {
           <a href="/auth" className="block w-full px-5 py-2 rounded-lg border border-primary/30 text-primary-foreground font-semibold text-sm text-center">
             Iniciar Sesión
           </a>
-          <a href="/auth?mode=register" className="block w-full px-5 py-2 rounded-lg bg-cta-gradient text-navy font-semibold text-sm text-center">
-            Crear Perfil Gratis
-          </a>
         </div>
       )}
     </nav>
