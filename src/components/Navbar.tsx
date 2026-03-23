@@ -27,9 +27,6 @@ const Navbar = () => {
           <a href="/auth" className="px-5 py-2 rounded-lg border border-primary/30 text-primary-foreground font-semibold text-sm hover:bg-primary/10 transition-colors">
             Iniciar Sesión
           </a>
-          <a href="/auth?mode=register" className="px-5 py-2 rounded-lg bg-cta-gradient text-navy font-semibold text-sm hover:opacity-90 transition-opacity">
-            Crear Perfil Gratis
-          </a>
         </div>
 
         {/* Mobile toggle */}
@@ -49,9 +46,6 @@ const Navbar = () => {
           <a href="#clubes" className="block text-sm text-primary-foreground/70 hover:text-primary-foreground">Para Clubes</a>
           <a href="/auth" className="block w-full px-5 py-2 rounded-lg border border-primary/30 text-primary-foreground font-semibold text-sm text-center">
             Iniciar Sesión
-          </a>
-          <a href="/auth?mode=register" className="block w-full px-5 py-2 rounded-lg bg-cta-gradient text-navy font-semibold text-sm text-center">
-            Crear Perfil Gratis
           </a>
         </div>
       )}
