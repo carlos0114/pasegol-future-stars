@@ -48,7 +48,15 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        toast.success("¡Cuenta creada! Revisá tu email para confirmar.");
+        toast.success("¡Cuenta creada exitosamente!");
+        // Redirect based on user type
+        if (userType === "club") {
+          navigate("/perfil-club");
+        } else if (userType === "scout") {
+          navigate("/perfil-scout");
+        } else {
+          navigate("/dashboard");
+        }
       }
     } catch (error: any) {
       toast.error(error.message);
