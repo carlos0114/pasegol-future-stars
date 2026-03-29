@@ -43,7 +43,9 @@ const Auth = () => {
           email,
           password,
           options: {
-            data: { full_name: fullName, user_type: userType },
+            // Only send full_name to auth metadata to avoid creating profile DB issues
+            // (some DB schemas may reject unknown user_type values during auth user replication).
+            data: { full_name: fullName },
             emailRedirectTo: window.location.origin,
           },
         });
@@ -63,11 +65,25 @@ const Auth = () => {
 
         toast.success("¡Cuenta creada exitosamente!");
 
-        // If the user object is returned (no email confirmation required), create profile row
+        // If the user object is returned (no email confirmation required), try to create profile row.
+        // Note: some Supabase setups create the `profiles` row server-side on auth signup via triggers.
+        // Sending `user_type` in auth metadata can cause a DB trigger/check constraint to fail
+        // if the server schema doesn't allow that value (e.g., CHECK only permits 'player'|'club').
         try {
           const userId = (data as any)?.user?.id;
           if (userId) {
-            await supabase.from("profiles").upsert({ id: userId, full_name: fullName, user_type: userType });
+            const { error: upsertErr } = await supabase.from("profiles").upsert({ id: userId, full_name: fullName, user_type: userType });
+            if (upsertErr) {
+              console.warn("Upsert profile failed:", upsertErr);
+              // Give the user actionable feedback if RLS or constraint blocked the insert
+              if (upsertErr.message?.includes("check") || upsertErr.message?.toLowerCase().includes("constraint")) {
+                toast.error("No se pudo crear el perfil automáticamente por una restricción en la base de datos. Revisá el campo 'user_type' en la tabla profiles (permitir 'scout' o cambiar el valor antes de crear).");
+              } else if (upsertErr.message?.toLowerCase().includes("permission") || upsertErr.code === "42501") {
+                toast.error("No tenés permisos para crear el perfil automáticamente. Iniciá sesión y completá tu perfil manualmente.");
+              } else {
+                toast.error("No se pudo crear el perfil automáticamente. Completá tu perfil desde el Dashboard después de iniciar sesión.");
+              }
+            }
           }
         } catch (upsertErr) {
           console.warn("No se pudo crear/actualizar el perfil automáticamente:", upsertErr);
