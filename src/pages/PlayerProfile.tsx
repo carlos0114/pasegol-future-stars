@@ -120,16 +120,43 @@ const PlayerProfile = () => {
     if (file.size > 5 * 1024 * 1024) { toast.error("La imagen no puede superar los 5MB"); return; }
 
     setUploadingPhoto(true);
-    const fileExt = file.name.split(".").pop();
+    const rawExt = file.name.split(".").pop();
+    const fileExt = rawExt ? rawExt.replace(/[^a-zA-Z0-9]/g, "") : "jpg";
     const filePath = `${user.id}/${player.id}.${fileExt}`;
-    if (player.photo_url) await supabase.storage.from("player-photos").remove([player.photo_url]);
 
-    const { error: uploadError } = await supabase.storage.from("player-photos").upload(filePath, file, { upsert: true });
-    if (uploadError) { toast.error("Error al subir la foto"); setUploadingPhoto(false); return; }
+    try {
+      // Remove previous photo if exists
+      if (player.photo_url) {
+        try { await supabase.storage.from("player-photos").remove([player.photo_url]); } catch (remErr) { console.warn("No se pudo borrar la foto anterior:", remErr); }
+      }
 
-    const { error: updateError } = await supabase.from("players").update({ photo_url: filePath }).eq("id", player.id);
-    if (!updateError) { toast.success("¡Foto subida!"); setPlayer({ ...player, photo_url: filePath }); }
-    setUploadingPhoto(false);
+      const { error: uploadError } = await supabase.storage.from("player-photos").upload(filePath, file, { upsert: true });
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
+        const msg = (uploadError.message || uploadError.statusText || "(sin detalles)");
+        if (String(msg).toLowerCase().includes("bucket not found")) {
+          toast.error("El bucket 'player-photos' no existe en Supabase. Crealo en Dashboard → Storage → Buckets y marcá acceso público.");
+        } else {
+          toast.error("Error al subir la foto: " + msg);
+        }
+        setUploadingPhoto(false);
+        return;
+      }
+
+      const { error: updateError } = await supabase.from("players").update({ photo_url: filePath }).eq("id", player.id);
+      if (updateError) {
+        console.error("DB update error:", updateError);
+        toast.error("Error al guardar la referencia de la foto: " + (updateError.message || "(sin detalles)"));
+      } else {
+        toast.success("¡Foto subida!");
+        setPlayer({ ...player, photo_url: filePath });
+      }
+    } catch (err) {
+      console.error("Unexpected error al subir foto:", err);
+      toast.error("Ocurrió un error inesperado al subir la foto");
+    } finally {
+      setUploadingPhoto(false);
+    }
   };
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,16 +166,42 @@ const PlayerProfile = () => {
     if (file.size > 50 * 1024 * 1024) { toast.error("El video no puede superar los 50MB"); return; }
 
     setUploading(true);
-    const fileExt = file.name.split(".").pop();
+    const rawExt = file.name.split(".").pop();
+    const fileExt = rawExt ? rawExt.replace(/[^a-zA-Z0-9]/g, "") : "mp4";
     const filePath = `${user.id}/${player.id}.${fileExt}`;
-    if (player.video_url) await supabase.storage.from("player-videos").remove([player.video_url]);
 
-    const { error: uploadError } = await supabase.storage.from("player-videos").upload(filePath, file, { upsert: true });
-    if (uploadError) { toast.error("Error al subir el video"); setUploading(false); return; }
+    try {
+      if (player.video_url) {
+        try { await supabase.storage.from("player-videos").remove([player.video_url]); } catch (remErr) { console.warn("No se pudo borrar el video anterior:", remErr); }
+      }
 
-    const { error: updateError } = await supabase.from("players").update({ video_url: filePath }).eq("id", player.id);
-    if (!updateError) { toast.success("¡Video subido!"); setPlayer({ ...player, video_url: filePath }); }
-    setUploading(false);
+      const { error: uploadError } = await supabase.storage.from("player-videos").upload(filePath, file, { upsert: true });
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
+        const msg = (uploadError.message || uploadError.statusText || "(sin detalles)");
+        if (String(msg).toLowerCase().includes("bucket not found")) {
+          toast.error("El bucket 'player-videos' no existe en Supabase. Crealo en Dashboard → Storage → Buckets y marcá acceso público.");
+        } else {
+          toast.error("Error al subir el video: " + msg);
+        }
+        setUploading(false);
+        return;
+      }
+
+      const { error: updateError } = await supabase.from("players").update({ video_url: filePath }).eq("id", player.id);
+      if (updateError) {
+        console.error("DB update error:", updateError);
+        toast.error("Error al guardar la referencia del video: " + (updateError.message || "(sin detalles)"));
+      } else {
+        toast.success("¡Video subido!");
+        setPlayer({ ...player, video_url: filePath });
+      }
+    } catch (err) {
+      console.error("Unexpected error al subir video:", err);
+      toast.error("Ocurrió un error inesperado al subir el video");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDeleteVideo = async () => {
