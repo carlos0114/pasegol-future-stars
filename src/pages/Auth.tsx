@@ -39,7 +39,7 @@ const Auth = () => {
         toast.success("¡Bienvenido de vuelta!");
         navigate("/dashboard");
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -47,8 +47,32 @@ const Auth = () => {
             emailRedirectTo: window.location.origin,
           },
         });
-        if (error) throw error;
+
+        if (error) {
+          console.error("SignUp error:", error);
+          // Server 500: suggest SMTP / logs check
+          const status = (error as any).status || (error as any).statusCode || null;
+          if (status === 500) {
+            toast.error("Error del servidor al crear la cuenta. Revisá SMTP y los logs en Supabase Dashboard (Authentication → Settings → SMTP / Logs).");
+          } else {
+            toast.error(error.message || "Error al crear la cuenta");
+          }
+          setLoading(false);
+          return;
+        }
+
         toast.success("¡Cuenta creada exitosamente!");
+
+        // If the user object is returned (no email confirmation required), create profile row
+        try {
+          const userId = (data as any)?.user?.id;
+          if (userId) {
+            await supabase.from("profiles").upsert({ id: userId, full_name: fullName, user_type: userType });
+          }
+        } catch (upsertErr) {
+          console.warn("No se pudo crear/actualizar el perfil automáticamente:", upsertErr);
+        }
+
         // Redirect based on user type
         if (userType === "club") {
           navigate("/perfil-club");
@@ -59,7 +83,8 @@ const Auth = () => {
         }
       }
     } catch (error: any) {
-      toast.error(error.message);
+      console.error("Auth error:", error);
+      toast.error(error?.message || "Error en la autenticación");
     } finally {
       setLoading(false);
     }
