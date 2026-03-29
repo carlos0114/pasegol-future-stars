@@ -265,20 +265,23 @@ const Dashboard = () => {
           )
         )}
 
-        {/* ===== SCOUT DASHBOARD ===== */}
+        {/* ===== SCOUT DASHBOARD (match club layout) ===== */}
         {resolvedUserType === "scout" && (
           scoutData ? (
             <div className="space-y-6">
+              {/* Header card (mirrors club header) */}
               <div className="bg-card rounded-2xl border border-border overflow-hidden">
                 <div className="bg-hero-gradient p-6">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-navy-light border border-lime/30 flex items-center justify-center">
-                        <UserSearch size={24} className="text-lime" />
-                      </div>
-                      <div>
-                        <h2 className="text-xl font-display text-primary-foreground">{scoutData.full_name}</h2>
-                        <p className="text-primary-foreground/60 text-sm">Scout • {scoutData.country}{scoutData.city ? `, ${scoutData.city}` : ""}</p>
+                    <div>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-12 h-12 rounded-xl bg-navy-light border border-lime/30 flex items-center justify-center">
+                          <UserSearch size={24} className="text-lime" />
+                        </div>
+                        <div>
+                          <h2 className="text-xl font-display text-primary-foreground">{scoutData.full_name}</h2>
+                          <p className="text-primary-foreground/60 text-sm">Scout • {scoutData.country}</p>
+                        </div>
                       </div>
                     </div>
                     {statusBadge(scoutData.verification_status)}
@@ -303,10 +306,11 @@ const Dashboard = () => {
                 </div>
               </div>
 
+              {/* Categories & Contact-like section (mirrors club layout but with scout fields) */}
               <div className="grid sm:grid-cols-2 gap-6">
                 {scoutData.target_positions && scoutData.target_positions.length > 0 && (
                   <div className="bg-card rounded-2xl border border-border p-6">
-                    <h3 className="text-lg font-display text-foreground mb-3 flex items-center gap-2"><Target size={18} className="text-lime" /> Posiciones buscadas</h3>
+                    <h3 className="text-lg font-display text-foreground mb-3 flex items-center gap-2"><Target size={18} className="text-lime" /> Posiciones de interés</h3>
                     <div className="flex flex-wrap gap-2">
                       {scoutData.target_positions.map((pos) => (
                         <span key={pos} className="px-3 py-1 rounded-full bg-lime/10 text-lime text-xs font-semibold">{pos}</span>
@@ -314,16 +318,19 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )}
-                {scoutData.previous_clubs && scoutData.previous_clubs.length > 0 && (
+                {(scoutData.previous_clubs && scoutData.previous_clubs.length > 0) || scoutData.player_type_sought ? (
                   <div className="bg-card rounded-2xl border border-border p-6">
-                    <h3 className="text-lg font-display text-foreground mb-3 flex items-center gap-2"><Briefcase size={18} className="text-lime" /> Clubes anteriores</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {scoutData.previous_clubs.map((club) => (
-                        <span key={club} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">{club}</span>
-                      ))}
-                    </div>
+                    <h3 className="text-lg font-display text-foreground mb-3 flex items-center gap-2"><Briefcase size={18} className="text-lime" /> Experiencia / Preferencias</h3>
+                    {scoutData.previous_clubs && scoutData.previous_clubs.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {scoutData.previous_clubs.map((club) => (
+                          <span key={club} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">{club}</span>
+                        ))}
+                      </div>
+                    )}
+                    {scoutData.player_type_sought && <p className="text-sm text-muted-foreground">Tipo buscado: {scoutData.player_type_sought}</p>}
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           ) : (
