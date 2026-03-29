@@ -57,9 +57,9 @@ const Dashboard = () => {
   const [clubData, setClubData] = useState<ClubData | null>(null);
   const [scoutData, setScoutData] = useState<ScoutData | null>(null);
 
-  // Resolve user type: prefer server-side profile, fallback to auth user metadata
+  // Resolve user type: if a scout record exists treat user as scout, otherwise prefer server-side profile, fallback to auth metadata
   const resolvedUserType: "player" | "club" | "scout" | null =
-    (profile as any)?.user_type || (user as any)?.user_metadata?.user_type || null;
+    scoutData ? "scout" : (profile as any)?.user_type || (user as any)?.user_metadata?.user_type || null;
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth");
