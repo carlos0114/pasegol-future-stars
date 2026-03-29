@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -83,25 +83,21 @@ const PlayerProfile = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (id) fetchPlayer();
-  }, [id]);
-
-  useEffect(() => {
-    if (user) fetchSenderProfile();
-  }, [user]);
-
-  const fetchPlayer = async () => {
-    const { data } = await supabase.from("players").select("*").eq("id", id!).single();
+  const fetchPlayer = useCallback(async () => {
+    if (!id) return;
+    const { data } = await supabase.from("players").select("*").eq("id", id!).maybeSingle();
     if (data) setPlayer(data as Player);
     setLoading(false);
-  };
+  }, [id]);
 
-  const fetchSenderProfile = async () => {
+  const fetchSenderProfile = useCallback(async () => {
     if (!user) return;
-    const { data } = await supabase.from("profiles").select("user_type").eq("id", user.id).single();
-    if (data) setSenderProfile(data);
-  };
+    const { data } = await supabase.from("profiles").select("user_type").eq("id", user.id).maybeSingle();
+    if (data) setSenderProfile(data as Profile);
+  }, [user]);
+
+  useEffect(() => { fetchPlayer(); }, [fetchPlayer]);
+  useEffect(() => { fetchSenderProfile(); }, [fetchSenderProfile]);
 
   const getVideoPublicUrl = (path: string) => {
     const { data } = supabase.storage.from("player-videos").getPublicUrl(path);
@@ -130,10 +126,10 @@ const PlayerProfile = () => {
         try { await supabase.storage.from("player-photos").remove([player.photo_url]); } catch (remErr) { console.warn("No se pudo borrar la foto anterior:", remErr); }
       }
 
-      const { error: uploadError } = await supabase.storage.from("player-photos").upload(filePath, file, { upsert: true });
-      if (uploadError) {
-        console.error("Upload error:", uploadError);
-        const msg = (uploadError.message || uploadError.statusText || "(sin detalles)");
+        const { error: uploadError } = await supabase.storage.from("player-photos").upload(filePath, file, { upsert: true });
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+          const msg = (uploadError.message || "(sin detalles)");
         if (String(msg).toLowerCase().includes("bucket not found")) {
           toast.error("El bucket 'player-photos' no existe en Supabase. Crealo en Dashboard → Storage → Buckets y marcá acceso público.");
         } else {
@@ -178,7 +174,7 @@ const PlayerProfile = () => {
       const { error: uploadError } = await supabase.storage.from("player-videos").upload(filePath, file, { upsert: true });
       if (uploadError) {
         console.error("Upload error:", uploadError);
-        const msg = (uploadError.message || uploadError.statusText || "(sin detalles)");
+        const msg = (uploadError.message || "(sin detalles)");
         if (String(msg).toLowerCase().includes("bucket not found")) {
           toast.error("El bucket 'player-videos' no existe en Supabase. Crealo en Dashboard → Storage → Buckets y marcá acceso público.");
         } else {
@@ -215,15 +211,22 @@ const PlayerProfile = () => {
   };
 
   const sendContactRequest = async () => {
-    if (!user || !player || !message.trim()) return;
+    if (!user || !player || !message.trim() || !player.profile_id) {
+      toast.error("No se puede enviar el mensaje en este momento");
+      return;
+    }
     setSending(true);
     const { error } = await supabase.from("contact_requests").insert({
-      sender_profile_id: user.id,
-      player_id: player.id,
+      requester_id: user.id,
+      recipient_id: player.profile_id,
       message: message.trim(),
     });
-    if (error) toast.error("Error al enviar mensaje");
-    else { toast.success("¡Mensaje enviado a la familia!"); setMessage(""); }
+    if (error) {
+      console.error("Error al enviar:", error);
+      toast.error("Error al enviar mensaje: " + error.message);
+    } else {
+      toast.success("¡Mensaje enviado a la familia!"); setMessage("");
+    }
     setSending(false);
   };
 
@@ -275,7 +278,7 @@ const PlayerProfile = () => {
                     {uploadingPhoto ? <Loader2 size={24} className="animate-spin text-lime" /> : <Upload size={24} className="text-lime" />}
                   </button>
                 )}
-                <input ref={photoInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                <input ref={photoInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" aria-label="Seleccionar foto de perfil" />
               </div>
 
               {/* Name & badges */}
@@ -448,7 +451,7 @@ const PlayerProfile = () => {
                   )}
                 </div>
               )}
-              <input ref={fileInputRef} type="file" accept="video/*" onChange={handleVideoUpload} className="hidden" />
+              <input ref={fileInputRef} type="file" accept="video/*" onChange={handleVideoUpload} className="hidden" aria-label="Seleccionar video del jugador" />
             </div>
           </TabsContent>
         </Tabs>
