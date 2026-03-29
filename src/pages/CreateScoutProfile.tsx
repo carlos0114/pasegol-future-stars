@@ -132,43 +132,78 @@ const CreateScoutProfile = () => {
           {/* Personal */}
           <section className="bg-card rounded-2xl border border-border p-6 space-y-4">
             <div className="flex items-center gap-2 mb-2"><User size={20} className="text-lime" /><h2 className="text-xl font-display text-foreground">INFORMACIÓN PERSONAL</h2></div>
-            <div><label className={labelClass}>Nombre completo *</label><input name="full_name" value={form.full_name} onChange={handleChange} required className={inputClass} placeholder="Tu nombre completo" /></div>
-            <div className="grid grid-cols-2 gap-4">
-              <div><label className={labelClass}>País</label><input name="country" value={form.country} onChange={handleChange} className={inputClass} /></div>
-              <div><label className={labelClass}>Ciudad</label><input name="city" value={form.city} onChange={handleChange} className={inputClass} placeholder="Buenos Aires" /></div>
+            <div>
+              <label htmlFor="full_name" className={labelClass}>Nombre completo *</label>
+              <input id="full_name" name="full_name" value={form.full_name} onChange={handleChange} required className={inputClass} placeholder="Tu nombre completo" />
             </div>
-            <div><label className={labelClass}>ID profesional (opcional)</label><input name="professional_id" value={form.professional_id} onChange={handleChange} className={inputClass} placeholder="Número de matrícula o ID" /></div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="country" className={labelClass}>País</label>
+                <input id="country" name="country" value={form.country} onChange={handleChange} className={inputClass} placeholder="Argentina" />
+              </div>
+              <div>
+                <label htmlFor="city" className={labelClass}>Ciudad</label>
+                <input id="city" name="city" value={form.city} onChange={handleChange} className={inputClass} placeholder="Buenos Aires" />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="professional_id" className={labelClass}>ID profesional (opcional)</label>
+              <input id="professional_id" name="professional_id" value={form.professional_id} onChange={handleChange} className={inputClass} placeholder="Número de matrícula o ID" />
+            </div>
           </section>
 
           {/* Experience */}
           <section className="bg-card rounded-2xl border border-border p-6 space-y-4">
             <div className="flex items-center gap-2 mb-2"><Briefcase size={20} className="text-lime" /><h2 className="text-xl font-display text-foreground">EXPERIENCIA</h2></div>
-            <div><label className={labelClass}>Años de experiencia</label><input name="years_experience" type="number" value={form.years_experience} onChange={handleChange} className={inputClass} placeholder="Ej: 5" /></div>
-            <div><label className={labelClass}>Clubes donde trabajó (separados por coma)</label><input name="previous_clubs" value={form.previous_clubs} onChange={handleChange} className={inputClass} placeholder="Club A, Club B, Club C" /></div>
             <div>
-              <label className={labelClass}>Especialidad</label>
-              <select name="player_type_sought" value={form.player_type_sought} onChange={handleChange} className={inputClass}>
+              <label htmlFor="years_experience" className={labelClass}>Años de experiencia</label>
+              <input id="years_experience" name="years_experience" type="number" value={form.years_experience} onChange={handleChange} className={inputClass} placeholder="Ej: 5" />
+            </div>
+            <div>
+              <label htmlFor="previous_clubs" className={labelClass}>Clubes donde trabajó (separados por coma)</label>
+              <input id="previous_clubs" name="previous_clubs" value={form.previous_clubs} onChange={handleChange} className={inputClass} placeholder="Club A, Club B, Club C" />
+            </div>
+            <div>
+              <label htmlFor="player_type_sought" className={labelClass}>Especialidad</label>
+              <select id="player_type_sought" name="player_type_sought" value={form.player_type_sought} onChange={handleChange} className={inputClass}>
                 <option value="">Seleccioná</option>
                 <option value="formativo">Formativo</option>
                 <option value="profesional">Profesional</option>
                 <option value="internacional">Internacional</option>
               </select>
             </div>
-            <div><label className={labelClass}>Referencias</label><textarea name="references_info" value={form.references_info} onChange={handleChange} rows={3} className={inputClass + " resize-none"} placeholder="Información de contacto de referencias profesionales" /></div>
+            <div>
+              <label htmlFor="references_info" className={labelClass}>Referencias</label>
+              <textarea id="references_info" name="references_info" value={form.references_info} onChange={handleChange} rows={3} className={inputClass + " resize-none"} placeholder="Información de contacto de referencias profesionales" />
+            </div>
           </section>
 
           {/* Search Preferences */}
           <section className="bg-card rounded-2xl border border-border p-6 space-y-4">
             <div className="flex items-center gap-2 mb-2"><Target size={20} className="text-lime" /><h2 className="text-xl font-display text-foreground">PREFERENCIAS DE BÚSQUEDA</h2></div>
             <div className="grid grid-cols-2 gap-4">
-              <div><label className={labelClass}>Edad mínima</label><input name="target_age_min" type="number" min="5" max="20" value={form.target_age_min} onChange={handleChange} className={inputClass} /></div>
-              <div><label className={labelClass}>Edad máxima</label><input name="target_age_max" type="number" min="5" max="20" value={form.target_age_max} onChange={handleChange} className={inputClass} /></div>
+              <div>
+                <label htmlFor="target_age_min" className={labelClass}>Edad mínima</label>
+                <input id="target_age_min" name="target_age_min" type="number" min="5" max="20" value={form.target_age_min} onChange={handleChange} className={inputClass} placeholder="5" />
+              </div>
+              <div>
+                <label htmlFor="target_age_max" className={labelClass}>Edad máxima</label>
+                <input id="target_age_max" name="target_age_max" type="number" min="5" max="20" value={form.target_age_max} onChange={handleChange} className={inputClass} placeholder="15" />
+              </div>
             </div>
             <div>
               <label className={labelClass}>Posiciones de interés</label>
               <div className="flex flex-wrap gap-2">
                 {positions.map((pos) => (
-                  <button key={pos} type="button" onClick={() => togglePosition(pos)} className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${form.target_positions.includes(pos) ? "bg-cta-gradient text-navy" : "border border-border text-muted-foreground hover:border-lime/50"}`}>{pos}</button>
+                  <button
+                    key={pos}
+                    type="button"
+                    onClick={() => togglePosition(pos)}
+                    aria-pressed={form.target_positions.includes(pos)}
+                    title={form.target_positions.includes(pos) ? `Quitar ${pos}` : `Agregar ${pos}`}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${form.target_positions.includes(pos) ? "bg-cta-gradient text-navy" : "border border-border text-muted-foreground hover:border-lime/50"}`}>
+                    {pos}
+                  </button>
                 ))}
               </div>
             </div>
