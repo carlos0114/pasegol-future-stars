@@ -148,7 +148,7 @@ const Dashboard = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            {resolvedUserType === "player" && (
+            {resolvedUserType === "player" && !scoutData && (
               <Link to="/crear-jugador" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity">
                 <Plus size={18} /> Agregar Jugador
               </Link>
