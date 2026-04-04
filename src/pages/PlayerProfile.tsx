@@ -217,8 +217,8 @@ const PlayerProfile = () => {
     }
     setSending(true);
     const { error } = await supabase.from("contact_requests").insert({
-      requester_id: user.id,
-      recipient_id: player.profile_id,
+      sender_profile_id: user.id,
+      player_id: player.id,
       message: message.trim(),
     });
     if (error) {
