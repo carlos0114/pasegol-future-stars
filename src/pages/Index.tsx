@@ -5,6 +5,7 @@ import Benefits from "@/components/Benefits";
 import PlayerShowcase from "@/components/PlayerShowcase";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import AdBanner from "@/components/AdBanner";
 
 const Index = () => {
   return (
@@ -12,6 +13,7 @@ const Index = () => {
       <Navbar />
       <Hero />
       <HowItWorks />
+      <AdBanner />
       <PlayerShowcase />
       <Benefits />
       <CTASection />
