@@ -33,6 +33,7 @@ const App = () => (
             <Route path="/perfil-scout" element={<CreateScoutProfile />} />
             <Route path="/jugador/:id" element={<PlayerProfile />} />
             <Route path="/explorar" element={<Explore />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
