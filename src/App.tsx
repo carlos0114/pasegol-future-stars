@@ -12,6 +12,7 @@ import CreateClubProfile from "./pages/CreateClubProfile";
 import CreateScoutProfile from "./pages/CreateScoutProfile";
 import PlayerProfile from "./pages/PlayerProfile";
 import Explore from "./pages/Explore";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/perfil-scout" element={<CreateScoutProfile />} />
             <Route path="/jugador/:id" element={<PlayerProfile />} />
             <Route path="/explorar" element={<Explore />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
