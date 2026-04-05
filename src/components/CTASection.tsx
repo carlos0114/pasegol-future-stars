@@ -11,8 +11,8 @@ const CTASection = () => {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-display text-primary-foreground leading-[0.95]">
             EL PRÓXIMO GRAN<br />
-            <span className="text-gradient-lime">JUGADOR</span> PUEDE<br />
-            SER TU HIJO
+            <span className="text-gradient-lime">JUGADOR</span> PODÉS<br />
+            SER VOS
           </h2>
           <p className="mt-6 text-lg text-primary-foreground/60 max-w-xl mx-auto font-body">
             No dejes que el talento pase desapercibido. Crea un perfil gratuito hoy y abre las puertas al futuro deportivo.
