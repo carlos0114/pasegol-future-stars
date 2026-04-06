@@ -415,8 +415,10 @@ const PlayerProfile = () => {
               </h3>
               {player.video_url ? (
                 <div className="space-y-3">
-                  <video src={getVideoPublicUrl(player.video_url)} controls
-                    className="w-full rounded-xl bg-muted object-contain" />
+                  <div className="flex justify-center">
+                    <video src={getVideoPublicUrl(player.video_url)} controls
+                      className="w-full max-h-[400px] rounded-xl bg-muted object-contain" />
+                  </div>
                   {isOwner && (
                     <div className="flex gap-2">
                       <button onClick={() => fileInputRef.current?.click()} disabled={uploading}
