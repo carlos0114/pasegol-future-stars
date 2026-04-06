@@ -17,14 +17,22 @@ interface Player {
 }
 
 const Explore = () => {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [posFilter, setPosFilter] = useState("");
 
   useEffect(() => {
-    fetchPlayers();
-  }, []);
+    if (!authLoading && !user) {
+      navigate("/auth");
+    }
+  }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (user) fetchPlayers();
+  }, [user]);
 
   const fetchPlayers = async () => {
     const { data } = await supabase.from("players").select("*").order("created_at", { ascending: false });
