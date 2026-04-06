@@ -42,6 +42,11 @@ const AdBanner = () => {
   return (
     <section className="py-6 bg-muted/30 border-y border-border/50">
       <div className="container mx-auto px-4">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="h-px flex-1 max-w-[80px] bg-border/50" />
+          <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground/60 font-medium">Sponsors</span>
+          <div className="h-px flex-1 max-w-[80px] bg-border/50" />
+        </div>
         {horizontalBanners.map(banner => (
           <div key={banner.id} className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden mb-4 last:mb-0">
             {banner.link_url ? (
