@@ -389,6 +389,43 @@ const Dashboard = () => {
           )
         )}
 
+        {/* ===== MENSAJES RECIBIDOS (para jugadores) ===== */}
+        {resolvedUserType === "player" && contactRequests.length > 0 && (
+          <div className="mb-8">
+            <div className="bg-card rounded-2xl border border-border overflow-hidden">
+              <div className="p-5 border-b border-border flex items-center gap-2">
+                <MessageSquare size={20} className="text-lime" />
+                <h3 className="text-lg font-display text-foreground">MENSAJES RECIBIDOS</h3>
+                <span className="ml-auto px-2.5 py-0.5 rounded-full bg-lime/20 text-lime text-xs font-bold">{contactRequests.length}</span>
+              </div>
+              <div className="divide-y divide-border max-h-96 overflow-y-auto">
+                {contactRequests.map((req) => (
+                  <div key={req.id} className="p-4 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-foreground text-sm">{req.sender_name}</span>
+                          {req.sender_email && (
+                            <span className="text-xs text-muted-foreground truncate">({req.sender_email})</span>
+                          )}
+                        </div>
+                        {req.player_name && (
+                          <p className="text-xs text-lime mb-1">Para: {req.player_name}</p>
+                        )}
+                        <p className="text-sm text-muted-foreground">{req.message}</p>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+                        <Clock size={12} />
+                        {new Date(req.created_at).toLocaleDateString("es-AR")}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ===== PLAYER DASHBOARD ===== */}
         {resolvedUserType === "player" && (
           loadingPlayers ? (
