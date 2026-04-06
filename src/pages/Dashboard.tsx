@@ -104,6 +104,35 @@ const Dashboard = () => {
     setLoadingPlayers(false);
   };
 
+  const fetchContactRequests = async () => {
+    const { data: myPlayers } = await supabase.from("players").select("id, name").eq("profile_id", user!.id);
+    if (!myPlayers || myPlayers.length === 0) return;
+    const playerIds = myPlayers.map((p) => p.id);
+    const playerMap = Object.fromEntries(myPlayers.map((p) => [p.id, p.name]));
+    const { data: requests } = await supabase
+      .from("contact_requests")
+      .select("*")
+      .in("player_id", playerIds)
+      .order("created_at", { ascending: false });
+    if (!requests) return;
+    const senderIds = [...new Set(requests.map((r) => r.sender_profile_id))];
+    const { data: senderProfiles } = await supabase
+      .from("profiles")
+      .select("id, full_name, email")
+      .in("id", senderIds);
+    const senderMap = Object.fromEntries(
+      (senderProfiles || []).map((s) => [s.id, { name: s.full_name, email: s.email }])
+    );
+    setContactRequests(
+      requests.map((r) => ({
+        ...r,
+        sender_name: senderMap[r.sender_profile_id]?.name || "Desconocido",
+        sender_email: senderMap[r.sender_profile_id]?.email || "",
+        player_name: playerMap[r.player_id] || "",
+      }))
+    );
+  };
+
   const deletePlayer = async (id: string) => {
     const { error } = await supabase.from("players").delete().eq("id", id);
     if (error) {
