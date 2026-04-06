@@ -77,10 +77,13 @@ const Dashboard = () => {
     if (!loading && !user) navigate("/auth");
   }, [user, loading, navigate]);
 
+  const [contactRequests, setContactRequests] = useState<ContactRequest[]>([]);
+
   useEffect(() => {
     if (user) {
       fetchProfile();
       fetchPlayers();
+      fetchContactRequests();
       supabase.from("clubs").select("*").eq("profile_id", user.id).maybeSingle().then(({ data }) => {
         if (data) setClubData(data);
       });
