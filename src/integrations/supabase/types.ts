@@ -501,6 +501,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_club_or_scout: { Args: { _user_id: string }; Returns: boolean }
       is_player_owner: { Args: { _player_id: string }; Returns: boolean }
     }
     Enums: {
