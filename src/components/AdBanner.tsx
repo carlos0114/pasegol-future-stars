@@ -32,10 +32,11 @@ const AdBanner = () => {
     return (
       <section className="py-6 bg-muted/30 border-y border-border/50">
       <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="h-px flex-1 max-w-[80px] bg-border/50" />
-            <span className="text-xs uppercase tracking-[0.25em] text-muted-foreground/60 font-medium">Sponsors</span>
-            <div className="h-px flex-1 max-w-[80px] bg-border/50" />
+          <div className="flex justify-center mb-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime/10 border border-lime/20">
+              <Megaphone size={14} className="text-lime" />
+              <span className="text-sm font-medium text-lime">Sponsors Oficiales</span>
+            </div>
           </div>
           <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden bg-card/50 border border-border/30 min-h-[100px] flex items-center justify-center">
             <span className="text-xs uppercase tracking-widest text-muted-foreground/40">Espacio publicitario</span>
