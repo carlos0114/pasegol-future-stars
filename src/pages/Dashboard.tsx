@@ -2,8 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Building2, UserSearch, Globe, Phone, Mail, Trophy, Briefcase, Target, Shield } from "lucide-react";
+import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Building2, UserSearch, Globe, Phone, Mail, Trophy, Briefcase, Target, Shield, MessageSquare, Clock } from "lucide-react";
 import { toast } from "sonner";
+
+interface ContactRequest {
+  id: string;
+  message: string;
+  status: string;
+  created_at: string;
+  player_id: string;
+  sender_profile_id: string;
+  sender_email?: string;
+  sender_name?: string;
+  player_name?: string;
+}
 
 interface Player {
   id: string;
@@ -65,10 +77,13 @@ const Dashboard = () => {
     if (!loading && !user) navigate("/auth");
   }, [user, loading, navigate]);
 
+  const [contactRequests, setContactRequests] = useState<ContactRequest[]>([]);
+
   useEffect(() => {
     if (user) {
       fetchProfile();
       fetchPlayers();
+      fetchContactRequests();
       supabase.from("clubs").select("*").eq("profile_id", user.id).maybeSingle().then(({ data }) => {
         if (data) setClubData(data);
       });
@@ -87,6 +102,35 @@ const Dashboard = () => {
     const { data } = await supabase.from("players").select("*").eq("profile_id", user!.id);
     if (data) setPlayers(data);
     setLoadingPlayers(false);
+  };
+
+  const fetchContactRequests = async () => {
+    const { data: myPlayers } = await supabase.from("players").select("id, name").eq("profile_id", user!.id);
+    if (!myPlayers || myPlayers.length === 0) return;
+    const playerIds = myPlayers.map((p) => p.id);
+    const playerMap = Object.fromEntries(myPlayers.map((p) => [p.id, p.name]));
+    const { data: requests } = await supabase
+      .from("contact_requests")
+      .select("*")
+      .in("player_id", playerIds)
+      .order("created_at", { ascending: false });
+    if (!requests) return;
+    const senderIds = [...new Set(requests.map((r) => r.sender_profile_id))];
+    const { data: senderProfiles } = await supabase
+      .from("profiles")
+      .select("id, full_name, email")
+      .in("id", senderIds);
+    const senderMap = Object.fromEntries(
+      (senderProfiles || []).map((s) => [s.id, { name: s.full_name, email: s.email }])
+    );
+    setContactRequests(
+      requests.map((r) => ({
+        ...r,
+        sender_name: senderMap[r.sender_profile_id]?.name || "Desconocido",
+        sender_email: senderMap[r.sender_profile_id]?.email || "",
+        player_name: playerMap[r.player_id] || "",
+      }))
+    );
   };
 
   const deletePlayer = async (id: string) => {
@@ -343,6 +387,43 @@ const Dashboard = () => {
               </Link>
             </div>
           )
+        )}
+
+        {/* ===== MENSAJES RECIBIDOS (para jugadores) ===== */}
+        {resolvedUserType === "player" && contactRequests.length > 0 && (
+          <div className="mb-8">
+            <div className="bg-card rounded-2xl border border-border overflow-hidden">
+              <div className="p-5 border-b border-border flex items-center gap-2">
+                <MessageSquare size={20} className="text-lime" />
+                <h3 className="text-lg font-display text-foreground">MENSAJES RECIBIDOS</h3>
+                <span className="ml-auto px-2.5 py-0.5 rounded-full bg-lime/20 text-lime text-xs font-bold">{contactRequests.length}</span>
+              </div>
+              <div className="divide-y divide-border max-h-96 overflow-y-auto">
+                {contactRequests.map((req) => (
+                  <div key={req.id} className="p-4 hover:bg-muted/30 transition-colors">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-foreground text-sm">{req.sender_name}</span>
+                          {req.sender_email && (
+                            <span className="text-xs text-muted-foreground truncate">({req.sender_email})</span>
+                          )}
+                        </div>
+                        {req.player_name && (
+                          <p className="text-xs text-lime mb-1">Para: {req.player_name}</p>
+                        )}
+                        <p className="text-sm text-muted-foreground">{req.message}</p>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+                        <Clock size={12} />
+                        {new Date(req.created_at).toLocaleDateString("es-AR")}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
         {/* ===== PLAYER DASHBOARD ===== */}
