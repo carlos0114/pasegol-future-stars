@@ -2,8 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Building2, UserSearch, Globe, Phone, Mail, Trophy, Briefcase, Target, Shield } from "lucide-react";
+import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Building2, UserSearch, Globe, Phone, Mail, Trophy, Briefcase, Target, Shield, MessageSquare, Clock } from "lucide-react";
 import { toast } from "sonner";
+
+interface ContactRequest {
+  id: string;
+  message: string;
+  status: string;
+  created_at: string;
+  player_id: string;
+  sender_profile_id: string;
+  sender_email?: string;
+  sender_name?: string;
+  player_name?: string;
+}
 
 interface Player {
   id: string;
