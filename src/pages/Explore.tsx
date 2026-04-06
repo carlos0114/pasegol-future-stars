@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import { MapPin, Ruler, Weight, ArrowLeft, Search } from "lucide-react";
 
 interface Player {
@@ -16,14 +17,22 @@ interface Player {
 }
 
 const Explore = () => {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [posFilter, setPosFilter] = useState("");
 
   useEffect(() => {
-    fetchPlayers();
-  }, []);
+    if (!authLoading && !user) {
+      navigate("/auth");
+    }
+  }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+    if (user) fetchPlayers();
+  }, [user]);
 
   const fetchPlayers = async () => {
     const { data } = await supabase.from("players").select("*").order("created_at", { ascending: false });

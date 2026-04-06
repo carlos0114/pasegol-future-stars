@@ -64,7 +64,7 @@ const PlayerShowcase = () => {
                   </div>
                 </div>
 
-                <a href="/explorar" className="block w-full mt-4 py-2.5 rounded-xl bg-cta-gradient text-navy font-semibold text-sm hover:opacity-90 transition-opacity text-center">
+                <a href="/auth" className="block w-full mt-4 py-2.5 rounded-xl bg-cta-gradient text-navy font-semibold text-sm hover:opacity-90 transition-opacity text-center">
                   Ver Perfil Completo
                 </a>
               </div>
