@@ -8,7 +8,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, GripVertical, ExternalLink, Shield } from "lucide-react";
+import { Trash2, Plus, GripVertical, ExternalLink, Shield, Mail } from "lucide-react";
+
+interface ContactMessage {
+  id: string;
+  message: string;
+  status: string;
+  created_at: string;
+  player_id: string;
+  sender_profile_id: string;
+  player_name?: string;
+  sender_name?: string;
+  sender_email?: string;
+}
 
 interface AdBanner {
   id: string;
