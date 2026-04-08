@@ -268,6 +268,42 @@ const Admin = () => {
             </div>
           )}
         </div>
+
+        {/* Contact Messages */}
+        <div className="bg-card border border-border rounded-xl p-6 mt-8">
+          <div className="flex items-center gap-3 mb-6">
+            <Mail className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-semibold text-foreground">Mensajes de Contacto</h2>
+          </div>
+
+          {loadingMessages ? (
+            <p className="text-muted-foreground">Cargando mensajes...</p>
+          ) : messages.length === 0 ? (
+            <p className="text-muted-foreground text-center py-8">No hay mensajes de contacto todavía.</p>
+          ) : (
+            <div className="space-y-3">
+              {messages.map(msg => (
+                <div key={msg.id} className="p-4 border border-border rounded-lg bg-background space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-foreground">{msg.sender_name}</span>
+                      {msg.sender_email && (
+                        <span className="text-xs text-muted-foreground">({msg.sender_email})</span>
+                      )}
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(msg.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Para: <span className="font-medium text-foreground">{msg.player_name}</span>
+                  </p>
+                  <p className="text-sm text-foreground">{msg.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
