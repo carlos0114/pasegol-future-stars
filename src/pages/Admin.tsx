@@ -40,6 +40,8 @@ const Admin = () => {
   const [checking, setChecking] = useState(true);
   const [banners, setBanners] = useState<AdBanner[]>([]);
   const [loadingBanners, setLoadingBanners] = useState(true);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(true);
 
   // New banner form
   const [newTitle, setNewTitle] = useState("");
