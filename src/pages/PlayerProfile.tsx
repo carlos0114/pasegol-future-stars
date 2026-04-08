@@ -155,11 +155,38 @@ const PlayerProfile = () => {
     }
   };
 
+  const checkVideoDuration = (file: File): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(video.src);
+        resolve(video.duration);
+      };
+      video.onerror = () => {
+        URL.revokeObjectURL(video.src);
+        reject(new Error("No se pudo leer el video"));
+      };
+      video.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user || !player) return;
     if (!file.type.startsWith("video/")) { toast.error("Solo se permiten archivos de video"); return; }
     if (file.size > 50 * 1024 * 1024) { toast.error("El video no puede superar los 50MB"); return; }
+
+    try {
+      const duration = await checkVideoDuration(file);
+      if (duration > 60) {
+        toast.error("El video no puede durar más de 1 minuto");
+        return;
+      }
+    } catch {
+      toast.error("No se pudo verificar la duración del video");
+      return;
+    }
 
     setUploading(true);
     const rawExt = file.name.split(".").pop();
