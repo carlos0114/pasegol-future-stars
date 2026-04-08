@@ -8,7 +8,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2, Plus, GripVertical, ExternalLink, Shield } from "lucide-react";
+import { Trash2, Plus, GripVertical, ExternalLink, Shield, Mail } from "lucide-react";
+
+interface ContactMessage {
+  id: string;
+  message: string;
+  status: string;
+  created_at: string;
+  player_id: string;
+  sender_profile_id: string;
+  player_name?: string;
+  sender_name?: string;
+  sender_email?: string;
+}
 
 interface AdBanner {
   id: string;
@@ -28,6 +40,8 @@ const Admin = () => {
   const [checking, setChecking] = useState(true);
   const [banners, setBanners] = useState<AdBanner[]>([]);
   const [loadingBanners, setLoadingBanners] = useState(true);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(true);
 
   // New banner form
   const [newTitle, setNewTitle] = useState("");
@@ -61,6 +75,39 @@ const Admin = () => {
     setIsAdmin(true);
     setChecking(false);
     fetchBanners();
+    fetchMessages();
+  };
+
+  const fetchMessages = async () => {
+    const { data: requests } = await supabase
+      .from("contact_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!requests || requests.length === 0) {
+      setMessages([]);
+      setLoadingMessages(false);
+      return;
+    }
+
+    const playerIds = [...new Set(requests.map(r => r.player_id))];
+    const senderIds = [...new Set(requests.map(r => r.sender_profile_id))];
+
+    const [{ data: players }, { data: profiles }] = await Promise.all([
+      supabase.from("players").select("id, name").in("id", playerIds),
+      supabase.from("profiles").select("id, full_name, email").in("id", senderIds),
+    ]);
+
+    const playerMap = Object.fromEntries((players || []).map(p => [p.id, p.name]));
+    const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+
+    setMessages(requests.map(r => ({
+      ...r,
+      player_name: playerMap[r.player_id] || "Desconocido",
+      sender_name: profileMap[r.sender_profile_id]?.full_name || "Desconocido",
+      sender_email: profileMap[r.sender_profile_id]?.email || "",
+    })));
+    setLoadingMessages(false);
   };
 
   const fetchBanners = async () => {
@@ -216,6 +263,42 @@ const Admin = () => {
                   <Button variant="ghost" size="icon" onClick={() => deleteBanner(banner.id)} className="text-destructive hover:text-destructive">
                     <Trash2 size={16} />
                   </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Contact Messages */}
+        <div className="bg-card border border-border rounded-xl p-6 mt-8">
+          <div className="flex items-center gap-3 mb-6">
+            <Mail className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-semibold text-foreground">Mensajes de Contacto</h2>
+          </div>
+
+          {loadingMessages ? (
+            <p className="text-muted-foreground">Cargando mensajes...</p>
+          ) : messages.length === 0 ? (
+            <p className="text-muted-foreground text-center py-8">No hay mensajes de contacto todavía.</p>
+          ) : (
+            <div className="space-y-3">
+              {messages.map(msg => (
+                <div key={msg.id} className="p-4 border border-border rounded-lg bg-background space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-foreground">{msg.sender_name}</span>
+                      {msg.sender_email && (
+                        <span className="text-xs text-muted-foreground">({msg.sender_email})</span>
+                      )}
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(msg.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Para: <span className="font-medium text-foreground">{msg.player_name}</span>
+                  </p>
+                  <p className="text-sm text-foreground">{msg.message}</p>
                 </div>
               ))}
             </div>
