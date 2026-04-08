@@ -75,6 +75,39 @@ const Admin = () => {
     setIsAdmin(true);
     setChecking(false);
     fetchBanners();
+    fetchMessages();
+  };
+
+  const fetchMessages = async () => {
+    const { data: requests } = await supabase
+      .from("contact_requests")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (!requests || requests.length === 0) {
+      setMessages([]);
+      setLoadingMessages(false);
+      return;
+    }
+
+    const playerIds = [...new Set(requests.map(r => r.player_id))];
+    const senderIds = [...new Set(requests.map(r => r.sender_profile_id))];
+
+    const [{ data: players }, { data: profiles }] = await Promise.all([
+      supabase.from("players").select("id, name").in("id", playerIds),
+      supabase.from("profiles").select("id, full_name, email").in("id", senderIds),
+    ]);
+
+    const playerMap = Object.fromEntries((players || []).map(p => [p.id, p.name]));
+    const profileMap = Object.fromEntries((profiles || []).map(p => [p.id, p]));
+
+    setMessages(requests.map(r => ({
+      ...r,
+      player_name: playerMap[r.player_id] || "Desconocido",
+      sender_name: profileMap[r.sender_profile_id]?.full_name || "Desconocido",
+      sender_email: profileMap[r.sender_profile_id]?.email || "",
+    })));
+    setLoadingMessages(false);
   };
 
   const fetchBanners = async () => {
