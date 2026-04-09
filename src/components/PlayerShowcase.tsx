@@ -1,9 +1,9 @@
 import { MapPin, Ruler, Weight } from "lucide-react";
 
 const players = [
-  { name: "Santiago López", age: 12, position: "Delantero", city: "Buenos Aires, AR", height: "1.52m", weight: "42kg", club: "River Plate Inf." },
-  { name: "Mateo García", age: 14, position: "Mediocampista", city: "Bogotá, CO", height: "1.65m", weight: "55kg", club: "Millonarios Sub-15" },
-  { name: "Diego Ramírez", age: 10, position: "Portero", city: "CDMX, MX", height: "1.42m", weight: "38kg", club: "América Cantera" },
+  { name: "Ismael Molina", age: 15, position: "Delantero", city: "Montevideo, UY", height: "1.55m", weight: "53.7kg", club: "Tacurú" },
+  { name: "Owen Vargas", age: 9, position: "Delantero", city: "Montevideo, UY", height: "1.20m", weight: "40kg", club: "Tacurú" },
+  { name: "Filippo Volpe", age: 8, position: "Defensa", city: "Montevideo, UY", height: "1.15m", weight: "35kg", club: "Tacurú" },
 ];
 
 const PlayerShowcase = () => {
