@@ -443,8 +443,18 @@ const PlayerProfile = () => {
               {player.video_url ? (
                 <div className="space-y-3">
                   <div className="flex justify-center">
-                    <video src={getVideoPublicUrl(player.video_url)} controls
-                      className="w-full max-h-[400px] rounded-xl bg-muted object-contain" />
+                    <video
+                      src={getVideoPublicUrl(player.video_url)}
+                      controls
+                      muted
+                      controlsList="nodownload novolume"
+                      disableRemotePlayback
+                      className="w-full max-h-[400px] rounded-xl bg-muted object-contain"
+                      onVolumeChange={(e) => {
+                        const v = e.currentTarget;
+                        if (!v.muted) v.muted = true;
+                      }}
+                    />
                   </div>
                   {isOwner && (
                     <div className="flex gap-2">
