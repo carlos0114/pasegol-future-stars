@@ -495,8 +495,8 @@ const PlayerProfile = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Contact section - only for clubs */}
-        {user && !isOwner && isClub && (
+        {/* Contact section - for clubs and scouts */}
+        {user && !isOwner && canContact && (
           <div className="mt-6 space-y-4">
             {/* Contact info */}
             {(player.parent_name || player.parent_email || player.parent_phone) && (
@@ -527,7 +527,7 @@ const PlayerProfile = () => {
           </div>
         )}
 
-        {user && !isOwner && !isClub && (
+        {user && !isOwner && !canContact && (
           <div className="mt-6 bg-card rounded-2xl border border-border p-6 text-center">
             <p className="text-muted-foreground text-sm">Solo los clubes y scouts pueden contactar a los jugadores.</p>
           </div>
