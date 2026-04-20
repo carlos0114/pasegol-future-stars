@@ -43,9 +43,9 @@ const Auth = () => {
           email,
           password,
           options: {
-            // Only send full_name to auth metadata to avoid creating profile DB issues
-            // (some DB schemas may reject unknown user_type values during auth user replication).
-            data: { full_name: fullName },
+            // Send full_name AND user_type so the handle_new_user trigger creates
+            // the profile with the correct role from the start.
+            data: { full_name: fullName, user_type: userType },
             emailRedirectTo: window.location.origin,
           },
         });
