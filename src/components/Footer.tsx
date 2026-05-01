@@ -89,7 +89,7 @@ const Footer = () => {
                 }
               />
               <a
-                href="https://www.youtube.com/channel/UC-ozth3d3E8rgWCNAGCJPuw"
+                href="https://www.youtube.com/@pasegol-c5t"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
