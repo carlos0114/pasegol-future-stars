@@ -14,10 +14,14 @@ const Footer = () => {
               La mayor plataforma de visibilidad para fútbol juvenil en Latinoamérica.
             </p>
             <div className="flex gap-3 mt-6">
-              {[Instagram, Twitter, Mail].map((Icon, i) => (
+              {[
+                { Icon: Instagram, href: "#" },
+                { Icon: Twitter, href: "#" },
+                { Icon: Mail, href: "mailto:pasegolcom@gmail.com" },
+              ].map(({ Icon, href }, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={href}
                   className="w-10 h-10 rounded-lg bg-navy-light flex items-center justify-center text-primary-foreground/50 hover:text-lime hover:bg-lime/10 transition-colors"
                 >
                   <Icon size={18} />
