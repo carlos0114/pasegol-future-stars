@@ -110,6 +110,17 @@ const Admin = () => {
     setLoadingMessages(false);
   };
 
+  const deleteMessage = async (id: string) => {
+    if (!confirm("¿Seguro que querés eliminar este mensaje?")) return;
+    const { error } = await supabase.from("contact_requests").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Error", description: "No se pudo eliminar el mensaje", variant: "destructive" });
+      return;
+    }
+    setMessages(prev => prev.filter(m => m.id !== id));
+    toast({ title: "Mensaje eliminado" });
+  };
+
   const fetchBanners = async () => {
     const { data, error } = await supabase
       .from("ad_banners")
