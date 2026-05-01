@@ -1,4 +1,4 @@
-import { Mail, Instagram, Twitter, Copy, Check } from "lucide-react";
+import { Mail, Instagram, Twitter, Youtube, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -88,6 +88,15 @@ const Footer = () => {
                   </button>
                 }
               />
+              <a
+                href="https://www.youtube.com/channel/UC-ozth3d3E8rgWCNAGCJPuw"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="w-10 h-10 rounded-lg bg-navy-light flex items-center justify-center text-primary-foreground/50 hover:text-lime hover:bg-lime/10 transition-colors"
+              >
+                <Youtube size={18} />
+              </a>
             </div>
           </div>
 
