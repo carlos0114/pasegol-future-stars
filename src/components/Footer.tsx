@@ -1,4 +1,4 @@
-import { Mail, Instagram, Twitter, Copy, Check } from "lucide-react";
+import { Mail, Instagram, Twitter, Youtube, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
