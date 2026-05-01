@@ -295,16 +295,26 @@ const Admin = () => {
             <div className="space-y-3">
               {messages.map(msg => (
                 <div key={msg.id} className="p-4 border border-border rounded-lg bg-background space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-medium text-foreground">{msg.sender_name}</span>
                       {msg.sender_email && (
                         <span className="text-xs text-muted-foreground">({msg.sender_email})</span>
                       )}
                     </div>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(msg.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(msg.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => deleteMessage(msg.id)}
+                        aria-label="Eliminar mensaje"
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Para: <span className="font-medium text-foreground">{msg.player_name}</span>
