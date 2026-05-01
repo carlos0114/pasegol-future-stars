@@ -44,20 +44,6 @@ const ContactEmailDialog = ({ trigger }: { trigger: React.ReactNode }) => {
             {copied ? <Check size={18} className="text-lime" /> : <Copy size={18} />}
           </Button>
         </div>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Button asChild className="flex-1">
-            <a href={`mailto:${CONTACT_EMAIL}`}>Abrir app de correo</a>
-          </Button>
-          <Button asChild variant="outline" className="flex-1">
-            <a
-              href={`https://mail.google.com/mail/?view=cm&fs=1&to=${CONTACT_EMAIL}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Abrir en Gmail
-            </a>
-          </Button>
-        </div>
       </DialogContent>
     </Dialog>
   );
