@@ -509,7 +509,7 @@ const PlayerProfile = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {player.parent_name && <InfoItem icon={<User size={16} />} label="Padre / Madre" value={player.parent_name} />}
                   {player.parent_email && <InfoItem icon={<Mail size={16} />} label="Email" value={player.parent_email} />}
-                  {player.parent_phone && <InfoItem icon={<Phone size={16} />} label="Teléfono" value={player.parent_phone} />}
+                  {player.parent_phone && <InfoItem icon={<Phone size={16} />} label="Teléfono" value={maskPhone(player.parent_phone)} />}
                 </div>
               </div>
             )}
