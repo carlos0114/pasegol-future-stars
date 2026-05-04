@@ -42,6 +42,13 @@ interface Profile {
   user_type: string;
 }
 
+// Enmascara el teléfono mostrando solo los primeros 3 y últimos 2 dígitos
+const maskPhone = (phone: string): string => {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length <= 5) return phone;
+  return `${digits.slice(0, 3)}${"x".repeat(digits.length - 5)}${digits.slice(-2)}`;
+};
+
 const SkillBar = ({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) => (
   <div className="space-y-1.5">
     <div className="flex items-center justify-between text-sm">
