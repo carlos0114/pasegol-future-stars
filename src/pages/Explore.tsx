@@ -35,7 +35,7 @@ const Explore = () => {
   }, [user]);
 
   const fetchPlayers = async () => {
-    const { data } = await supabase.from("players").select("*").order("created_at", { ascending: false });
+    const { data } = await supabase.from("players").select("*").order("created_at", { ascending: true });
     if (data) setPlayers(data);
     setLoading(false);
   };
