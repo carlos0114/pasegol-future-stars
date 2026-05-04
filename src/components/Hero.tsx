@@ -24,10 +24,10 @@ const Hero = () => {
             <span className="text-sm font-medium text-lime">La plataforma #1 de scouting juvenil</span>
           </div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display leading-[0.9] text-primary-foreground mb-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            EL TALENTO<br />
-            NO SE PIERDE.<br />
-            <span className="text-gradient-lime">SE MUESTRA.</span>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display leading-[0.95] text-primary-foreground mb-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            ¿TIENES TALENTO<br />
+            PERO NADIE<br />
+            <span className="text-gradient-lime">TE DESCUBRE?</span>
           </h1>
 
           <p className="text-lg md:text-xl text-primary-foreground/70 max-w-xl mb-10 font-body animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
