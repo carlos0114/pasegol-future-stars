@@ -14,7 +14,7 @@ const steps = [
   {
     icon: Search,
     title: "SÉ DESCUBIERTO",
-    description: "Clubes y buscatalentos buscan perfiles filtrados por edad, posición y país.",
+    description: "Clubes y cazatalentos buscan perfiles filtrados por edad, posición y país.",
   },
   {
     icon: Handshake,
