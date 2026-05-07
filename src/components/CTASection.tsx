@@ -23,7 +23,7 @@ const CTASection = () => {
               <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </a>
             <a href="/auth?mode=register&type=club" className="px-8 py-4 rounded-xl border-2 border-gold/30 text-gold font-semibold text-lg hover:border-gold/50 hover:bg-gold/5 transition-all">
-              Soy Club / Buscatalento
+              Soy Club / Cazatalento
             </a>
           </div>
         </div>
