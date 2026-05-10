@@ -65,6 +65,10 @@ const CreatePlayer = () => {
       parent_name: form.parent_name || null,
       parent_email: form.parent_email || null,
       parent_phone: form.parent_phone || null,
+      native_language: form.native_language || null,
+      other_languages: form.other_languages
+        ? form.other_languages.split(",").map((s) => s.trim()).filter(Boolean)
+        : [],
     });
 
     if (error) toast.error("Error al crear el perfil: " + error.message);
