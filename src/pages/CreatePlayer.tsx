@@ -22,6 +22,7 @@ const CreatePlayer = () => {
     preferred_foot: "Derecha", years_playing: "", achievements: "",
     speed: 50, technique: 50, game_vision: 50, finishing: 50, endurance: 50,
     parent_name: "", parent_email: "", parent_phone: "",
+    native_language: "", other_languages: "",
   });
 
   useEffect(() => {
@@ -64,6 +65,10 @@ const CreatePlayer = () => {
       parent_name: form.parent_name || null,
       parent_email: form.parent_email || null,
       parent_phone: form.parent_phone || null,
+      native_language: form.native_language || null,
+      other_languages: form.other_languages
+        ? form.other_languages.split(",").map((s) => s.trim()).filter(Boolean)
+        : [],
     });
 
     if (error) toast.error("Error al crear el perfil: " + error.message);
@@ -173,6 +178,16 @@ const CreatePlayer = () => {
               <div>
                 <label className={labelClass}>Logros o campeonatos</label>
                 <textarea name="achievements" value={form.achievements} onChange={handleChange} className={`${inputClass} resize-none h-20`} placeholder="Ej: Campeón Liga Infantil 2025, Mejor jugador del torneo..." />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>Idioma nativo</label>
+                  <input name="native_language" value={form.native_language} onChange={handleChange} className={inputClass} placeholder="Ej: Español" />
+                </div>
+                <div>
+                  <label className={labelClass}>Otros idiomas</label>
+                  <input name="other_languages" value={form.other_languages} onChange={handleChange} className={inputClass} placeholder="Separados por coma. Ej: Inglés, Portugués" />
+                </div>
               </div>
             </div>
           </section>

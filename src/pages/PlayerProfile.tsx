@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   MapPin, Ruler, Weight, ArrowLeft, Send, Upload, Loader2, Trash2,
-  Calendar, Footprints, Shield, Trophy, Clock, Star, Play, Image, Mail, Phone, User
+  Calendar, Footprints, Shield, Trophy, Clock, Star, Play, Image, Mail, Phone, User, Languages
 } from "lucide-react";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
@@ -36,6 +36,8 @@ interface Player {
   parent_name: string | null;
   parent_email: string | null;
   parent_phone: string | null;
+  native_language: string | null;
+  other_languages: string[] | null;
 }
 
 interface Profile {
@@ -399,6 +401,8 @@ const PlayerProfile = () => {
                 {player.weight && <InfoItem icon={<Weight size={16} />} label="Peso" value={player.weight} />}
                 {player.city && <InfoItem icon={<MapPin size={16} />} label="Ciudad / País" value={player.city} />}
                 {player.preferred_foot && <InfoItem icon={<Footprints size={16} />} label="Pierna hábil" value={player.preferred_foot} />}
+                {player.native_language && <InfoItem icon={<Languages size={16} />} label="Idioma nativo" value={player.native_language} />}
+                {player.other_languages && player.other_languages.length > 0 && <InfoItem icon={<Languages size={16} />} label="Otros idiomas" value={player.other_languages.join(", ")} />}
               </div>
             </div>
 

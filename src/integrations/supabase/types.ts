@@ -292,6 +292,8 @@ export type Database = {
           height: string | null
           id: string
           name: string
+          native_language: string | null
+          other_languages: string[] | null
           parent_email: string | null
           parent_name: string | null
           parent_phone: string | null
@@ -321,6 +323,8 @@ export type Database = {
           height?: string | null
           id?: string
           name: string
+          native_language?: string | null
+          other_languages?: string[] | null
           parent_email?: string | null
           parent_name?: string | null
           parent_phone?: string | null
@@ -350,6 +354,8 @@ export type Database = {
           height?: string | null
           id?: string
           name?: string
+          native_language?: string | null
+          other_languages?: string[] | null
           parent_email?: string | null
           parent_name?: string | null
           parent_phone?: string | null
