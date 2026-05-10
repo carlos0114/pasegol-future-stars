@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -15,7 +15,10 @@ const labelClass = "block text-sm font-medium text-muted-foreground mb-1";
 const CreatePlayer = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const { id: editId } = useParams<{ id: string }>();
+  const isEdit = Boolean(editId);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingData, setLoadingData] = useState(isEdit);
   const [form, setForm] = useState({
     name: "", age: "", birth_year: "", position: "", secondary_position: "",
     city: "", height: "", weight: "", club: "", category: "",
@@ -28,6 +31,50 @@ const CreatePlayer = () => {
   useEffect(() => {
     if (!loading && !user) navigate("/auth?mode=register");
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    const load = async () => {
+      if (!isEdit || !user || !editId) return;
+      const { data, error } = await supabase.from("players").select("*").eq("id", editId).maybeSingle();
+      if (error || !data) {
+        toast.error("No se pudo cargar el jugador");
+        navigate("/dashboard");
+        return;
+      }
+      if (data.profile_id !== user.id) {
+        toast.error("No tenés permiso para editar este jugador");
+        navigate("/dashboard");
+        return;
+      }
+      setForm({
+        name: data.name ?? "",
+        age: data.age?.toString() ?? "",
+        birth_year: data.birth_year?.toString() ?? "",
+        position: data.position ?? "",
+        secondary_position: data.secondary_position ?? "",
+        city: data.city ?? "",
+        height: data.height ?? "",
+        weight: data.weight ?? "",
+        club: data.club ?? "",
+        category: data.category ?? "",
+        preferred_foot: data.preferred_foot ?? "Derecha",
+        years_playing: data.years_playing?.toString() ?? "",
+        achievements: data.achievements ?? "",
+        speed: data.speed ?? 50,
+        technique: data.technique ?? 50,
+        game_vision: data.game_vision ?? 50,
+        finishing: data.finishing ?? 50,
+        endurance: data.endurance ?? 50,
+        parent_name: data.parent_name ?? "",
+        parent_email: data.parent_email ?? "",
+        parent_phone: data.parent_phone ?? "",
+        native_language: data.native_language ?? "",
+        other_languages: (data.other_languages ?? []).join(", "),
+      });
+      setLoadingData(false);
+    };
+    load();
+  }, [isEdit, editId, user, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -42,8 +89,7 @@ const CreatePlayer = () => {
     if (!user) return;
     setSubmitting(true);
 
-    const { error } = await supabase.from("players").insert({
-      profile_id: user.id,
+    const payload = {
       name: form.name,
       age: parseInt(form.age),
       position: form.position,
@@ -69,10 +115,17 @@ const CreatePlayer = () => {
       other_languages: form.other_languages
         ? form.other_languages.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
-    });
+    };
 
-    if (error) toast.error("Error al crear el perfil: " + error.message);
-    else { toast.success("¡Jugador creado con éxito!"); navigate("/dashboard"); }
+    const { error } = isEdit
+      ? await supabase.from("players").update(payload).eq("id", editId!)
+      : await supabase.from("players").insert({ ...payload, profile_id: user.id });
+
+    if (error) toast.error((isEdit ? "Error al actualizar: " : "Error al crear el perfil: ") + error.message);
+    else {
+      toast.success(isEdit ? "¡Cambios guardados!" : "¡Jugador creado con éxito!");
+      navigate(isEdit ? `/jugador/${editId}` : "/dashboard");
+    }
     setSubmitting(false);
   };
 
@@ -86,6 +139,10 @@ const CreatePlayer = () => {
     </div>
   );
 
+  if (loadingData) {
+    return <div className="min-h-screen bg-background flex items-center justify-center text-muted-foreground">Cargando...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-navy border-b border-lime/10">
@@ -96,8 +153,12 @@ const CreatePlayer = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8 max-w-2xl">
-        <h1 className="text-3xl font-display text-foreground mb-1">CREAR JUGADOR</h1>
-        <p className="text-muted-foreground text-sm mb-8">Completá los datos del jugador para que pueda ser descubierto por clubes y scouts.</p>
+        <h1 className="text-3xl font-display text-foreground mb-1">{isEdit ? "EDITAR JUGADOR" : "CREAR JUGADOR"}</h1>
+        <p className="text-muted-foreground text-sm mb-8">
+          {isEdit
+            ? "Actualizá los datos del jugador."
+            : "Completá los datos del jugador para que pueda ser descubierto por clubes y scouts."}
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Personal Data */}
@@ -229,7 +290,7 @@ const CreatePlayer = () => {
 
           <button type="submit" disabled={submitting}
             className="w-full py-3.5 rounded-xl bg-cta-gradient text-navy font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50">
-            {submitting ? "Creando..." : "Crear Jugador"}
+            {submitting ? (isEdit ? "Guardando..." : "Creando...") : (isEdit ? "Guardar Cambios" : "Crear Jugador")}
           </button>
         </form>
       </div>
