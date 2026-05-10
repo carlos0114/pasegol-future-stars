@@ -401,6 +401,8 @@ const PlayerProfile = () => {
                 {player.weight && <InfoItem icon={<Weight size={16} />} label="Peso" value={player.weight} />}
                 {player.city && <InfoItem icon={<MapPin size={16} />} label="Ciudad / País" value={player.city} />}
                 {player.preferred_foot && <InfoItem icon={<Footprints size={16} />} label="Pierna hábil" value={player.preferred_foot} />}
+                {player.native_language && <InfoItem icon={<Languages size={16} />} label="Idioma nativo" value={player.native_language} />}
+                {player.other_languages && player.other_languages.length > 0 && <InfoItem icon={<Languages size={16} />} label="Otros idiomas" value={player.other_languages.join(", ")} />}
               </div>
             </div>
 
