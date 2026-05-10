@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Building2, UserSearch, Globe, Phone, Mail, Trophy, Briefcase, Target, Shield, MessageSquare, Clock } from "lucide-react";
+import { Plus, LogOut, MapPin, Ruler, Weight, Trash2, Pencil, Building2, UserSearch, Globe, Phone, Mail, Trophy, Briefcase, Target, Shield, MessageSquare, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 interface ContactRequest {
@@ -477,9 +477,17 @@ const Dashboard = () => {
                       >
                         Ver Perfil
                       </Link>
+                      <Link
+                        to={`/editar-jugador/${p.id}`}
+                        className="p-2 rounded-xl border border-lime/30 text-lime hover:bg-lime/10 transition-colors"
+                        aria-label="Editar perfil"
+                      >
+                        <Pencil size={16} />
+                      </Link>
                       <button
                         onClick={() => deletePlayer(p.id)}
                         className="p-2 rounded-xl border border-destructive/30 text-destructive hover:bg-destructive/10 transition-colors"
+                        aria-label="Eliminar jugador"
                       >
                         <Trash2 size={16} />
                       </button>
