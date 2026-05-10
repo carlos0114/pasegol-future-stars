@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   MapPin, Ruler, Weight, ArrowLeft, Send, Upload, Loader2, Trash2,
-  Calendar, Footprints, Shield, Trophy, Clock, Star, Play, Image, Mail, Phone, User
+  Calendar, Footprints, Shield, Trophy, Clock, Star, Play, Image, Mail, Phone, User, Languages
 } from "lucide-react";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
