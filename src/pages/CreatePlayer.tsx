@@ -22,6 +22,7 @@ const CreatePlayer = () => {
     preferred_foot: "Derecha", years_playing: "", achievements: "",
     speed: 50, technique: 50, game_vision: 50, finishing: 50, endurance: 50,
     parent_name: "", parent_email: "", parent_phone: "",
+    native_language: "", other_languages: "",
   });
 
   useEffect(() => {
