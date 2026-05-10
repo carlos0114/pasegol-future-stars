@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   MapPin, Ruler, Weight, ArrowLeft, Send, Upload, Loader2, Trash2,
-  Calendar, Footprints, Shield, Trophy, Clock, Star, Play, Image, Mail, Phone, User, Languages
+  Calendar, Footprints, Shield, Trophy, Clock, Star, Play, Image, Mail, Phone, User, Languages, Pencil
 } from "lucide-react";
 import { toast } from "sonner";
 import { Progress } from "@/components/ui/progress";
@@ -286,6 +286,14 @@ const PlayerProfile = () => {
           <span className="text-2xl font-display text-primary-foreground">
             PASE<span className="text-gradient-lime">GOL</span>
           </span>
+          {isOwner && (
+            <Link
+              to={`/editar-jugador/${player.id}`}
+              className="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-lime/20 text-lime border border-lime/30 text-sm font-semibold hover:bg-lime/30 transition-colors"
+            >
+              <Pencil size={16} /> Editar perfil
+            </Link>
+          )}
         </div>
       </header>
 
