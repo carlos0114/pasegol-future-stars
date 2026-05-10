@@ -179,6 +179,16 @@ const CreatePlayer = () => {
                 <label className={labelClass}>Logros o campeonatos</label>
                 <textarea name="achievements" value={form.achievements} onChange={handleChange} className={`${inputClass} resize-none h-20`} placeholder="Ej: Campeón Liga Infantil 2025, Mejor jugador del torneo..." />
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className={labelClass}>Idioma nativo</label>
+                  <input name="native_language" value={form.native_language} onChange={handleChange} className={inputClass} placeholder="Ej: Español" />
+                </div>
+                <div>
+                  <label className={labelClass}>Otros idiomas</label>
+                  <input name="other_languages" value={form.other_languages} onChange={handleChange} className={inputClass} placeholder="Separados por coma. Ej: Inglés, Portugués" />
+                </div>
+              </div>
             </div>
           </section>
 
