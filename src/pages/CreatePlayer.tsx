@@ -25,7 +25,7 @@ const CreatePlayer = () => {
     preferred_foot: "Derecha", years_playing: "", achievements: "",
     speed: 50, technique: 50, game_vision: 50, finishing: 50, endurance: 50,
     parent_name: "", parent_email: "", parent_phone: "",
-    native_language: "", other_languages: "",
+    native_language: "", other_languages: "", eu_passport: false,
   });
 
   useEffect(() => {
@@ -70,6 +70,7 @@ const CreatePlayer = () => {
         parent_phone: data.parent_phone ?? "",
         native_language: data.native_language ?? "",
         other_languages: (data.other_languages ?? []).join(", "),
+        eu_passport: data.eu_passport ?? false,
       });
       setLoadingData(false);
     };
@@ -115,6 +116,7 @@ const CreatePlayer = () => {
       other_languages: form.other_languages
         ? form.other_languages.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
+      eu_passport: form.eu_passport,
     };
 
     const { error } = isEdit
@@ -248,7 +250,26 @@ const CreatePlayer = () => {
                 <div>
                   <label className={labelClass}>Otros idiomas</label>
                   <input name="other_languages" value={form.other_languages} onChange={handleChange} className={inputClass} placeholder="Separados por coma. Ej: Inglés, Portugués" />
+              </div>
+              <div>
+                <label className={labelClass}>¿Tiene pasaporte comunitario (UE)?</label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, eu_passport: true }))}
+                    className={`flex-1 py-2.5 rounded-xl border text-sm font-semibold transition-colors ${form.eu_passport ? "bg-lime/20 text-lime border-lime" : "bg-card text-muted-foreground border-border hover:text-foreground"}`}
+                  >
+                    Sí
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, eu_passport: false }))}
+                    className={`flex-1 py-2.5 rounded-xl border text-sm font-semibold transition-colors ${!form.eu_passport ? "bg-lime/20 text-lime border-lime" : "bg-card text-muted-foreground border-border hover:text-foreground"}`}
+                  >
+                    No
+                  </button>
                 </div>
+              </div>
               </div>
             </div>
           </section>

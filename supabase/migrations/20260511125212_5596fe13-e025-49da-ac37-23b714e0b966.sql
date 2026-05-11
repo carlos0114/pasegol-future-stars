@@ -1,0 +1,1 @@
+ALTER TABLE public.players ADD COLUMN IF NOT EXISTS eu_passport boolean NOT NULL DEFAULT false;

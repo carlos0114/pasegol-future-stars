@@ -287,6 +287,7 @@ export type Database = {
           club: string | null
           created_at: string
           endurance: number | null
+          eu_passport: boolean
           finishing: number | null
           game_vision: number | null
           height: string | null
@@ -318,6 +319,7 @@ export type Database = {
           club?: string | null
           created_at?: string
           endurance?: number | null
+          eu_passport?: boolean
           finishing?: number | null
           game_vision?: number | null
           height?: string | null
@@ -349,6 +351,7 @@ export type Database = {
           club?: string | null
           created_at?: string
           endurance?: number | null
+          eu_passport?: boolean
           finishing?: number | null
           game_vision?: number | null
           height?: string | null
