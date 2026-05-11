@@ -199,6 +199,10 @@ const Explore = () => {
               ))}
             </div>
           )
+        ) : userType !== "club" ? (
+          <div className="bg-card rounded-2xl border border-border p-12 text-center">
+            <p className="text-muted-foreground">Solo los clubes pueden ver el directorio de cazatalentos.</p>
+          </div>
         ) : filteredScouts.length === 0 ? (
           <div className="bg-card rounded-2xl border border-border p-12 text-center">
             <p className="text-muted-foreground">No se encontraron cazatalentos.</p>
