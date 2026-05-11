@@ -42,6 +42,7 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [posFilter, setPosFilter] = useState("");
+  const [userType, setUserType] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -51,10 +52,21 @@ const Explore = () => {
 
   useEffect(() => {
     if (user) {
+      fetchUserType();
       fetchPlayers();
-      fetchScouts();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (tab === "scouts" && userType === "club") {
+      fetchScouts();
+    }
+  }, [tab, userType]);
+
+  const fetchUserType = async () => {
+    const { data } = await supabase.from("profiles").select("user_type").eq("id", user!.id).maybeSingle();
+    if (data) setUserType(data.user_type);
+  };
 
   const fetchPlayers = async () => {
     const { data } = await supabase.from("players").select("*").order("created_at", { ascending: true });
