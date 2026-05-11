@@ -116,6 +116,7 @@ const CreatePlayer = () => {
       other_languages: form.other_languages
         ? form.other_languages.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
+      eu_passport: form.eu_passport,
     };
 
     const { error } = isEdit
