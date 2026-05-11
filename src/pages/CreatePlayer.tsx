@@ -70,6 +70,7 @@ const CreatePlayer = () => {
         parent_phone: data.parent_phone ?? "",
         native_language: data.native_language ?? "",
         other_languages: (data.other_languages ?? []).join(", "),
+        eu_passport: data.eu_passport ?? false,
       });
       setLoadingData(false);
     };
