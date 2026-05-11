@@ -250,7 +250,26 @@ const CreatePlayer = () => {
                 <div>
                   <label className={labelClass}>Otros idiomas</label>
                   <input name="other_languages" value={form.other_languages} onChange={handleChange} className={inputClass} placeholder="Separados por coma. Ej: Inglés, Portugués" />
+              </div>
+              <div>
+                <label className={labelClass}>¿Tiene pasaporte comunitario (UE)?</label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, eu_passport: true }))}
+                    className={`flex-1 py-2.5 rounded-xl border text-sm font-semibold transition-colors ${form.eu_passport ? "bg-lime/20 text-lime border-lime" : "bg-card text-muted-foreground border-border hover:text-foreground"}`}
+                  >
+                    Sí
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, eu_passport: false }))}
+                    className={`flex-1 py-2.5 rounded-xl border text-sm font-semibold transition-colors ${!form.eu_passport ? "bg-lime/20 text-lime border-lime" : "bg-card text-muted-foreground border-border hover:text-foreground"}`}
+                  >
+                    No
+                  </button>
                 </div>
+              </div>
               </div>
             </div>
           </section>
