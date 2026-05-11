@@ -38,6 +38,7 @@ interface Player {
   parent_phone: string | null;
   native_language: string | null;
   other_languages: string[] | null;
+  eu_passport: boolean | null;
 }
 
 interface Profile {
