@@ -203,7 +203,7 @@ const Dashboard = () => {
                   <Building2 size={18} /> {clubData ? "Editar Perfil Club" : "Crear Perfil Club"}
                 </Link>
                 <Link to="/explorar" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity">
-                  Explorar Jugadores
+                  Explorar
                 </Link>
               </>
             )}
@@ -213,7 +213,7 @@ const Dashboard = () => {
                   <UserSearch size={18} /> {scoutData ? "Editar Perfil Scout" : "Crear Perfil Scout"}
                 </Link>
                 <Link to="/explorar" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cta-gradient text-navy font-semibold hover:opacity-90 transition-opacity">
-                  Explorar Jugadores
+                  Explorar
                 </Link>
               </>
             )}
