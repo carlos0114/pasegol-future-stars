@@ -4,6 +4,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +22,8 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [userType, setUserType] = useState<"player" | "club" | "scout">("player");
   const [loading, setLoading] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [pendingSubmit, setPendingSubmit] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
@@ -28,81 +40,86 @@ const Auth = () => {
     if (mode === "register") setIsLogin(false);
   }, [searchParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const executeRegister = async () => {
+    setShowTerms(false);
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        toast.success("¡Bienvenido de vuelta!");
-        navigate("/dashboard");
-      } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            // Send full_name AND user_type so the handle_new_user trigger creates
-            // the profile with the correct role from the start.
-            data: { full_name: fullName, user_type: userType },
-            emailRedirectTo: window.location.origin,
-          },
-        });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName, user_type: userType },
+          emailRedirectTo: window.location.origin,
+        },
+      });
 
-        if (error) {
-          console.error("SignUp error:", error);
-          // Server 500: suggest SMTP / logs check
-          const status = (error as any).status || (error as any).statusCode || null;
-          if (status === 500) {
-            toast.error("Error del servidor al crear la cuenta. Revisá SMTP y los logs en Supabase Dashboard (Authentication → Settings → SMTP / Logs).");
-          } else {
-            toast.error(error.message || "Error al crear la cuenta");
-          }
-          setLoading(false);
-          return;
+      if (error) {
+        console.error("SignUp error:", error);
+        const status = (error as any).status || (error as any).statusCode || null;
+        if (status === 500) {
+          toast.error("Error del servidor al crear la cuenta. Revisá SMTP y los logs en Supabase Dashboard (Authentication → Settings → SMTP / Logs).");
+        } else {
+          toast.error(error.message || "Error al crear la cuenta");
         }
+        setLoading(false);
+        return;
+      }
 
-        toast.success("¡Cuenta creada exitosamente!");
+      toast.success("¡Cuenta creada exitosamente!");
 
-        // If the user object is returned (no email confirmation required), try to create profile row.
-        // Note: some Supabase setups create the `profiles` row server-side on auth signup via triggers.
-        // Sending `user_type` in auth metadata can cause a DB trigger/check constraint to fail
-        // if the server schema doesn't allow that value (e.g., CHECK only permits 'player'|'club').
-        try {
-          const userId = (data as any)?.user?.id;
-          if (userId) {
-            const { error: upsertErr } = await supabase.from("profiles").upsert({ id: userId, full_name: fullName, user_type: userType });
-            if (upsertErr) {
-              console.warn("Upsert profile failed:", upsertErr);
-              // Give the user actionable feedback if RLS or constraint blocked the insert
-              if (upsertErr.message?.includes("check") || upsertErr.message?.toLowerCase().includes("constraint")) {
-                toast.error("No se pudo crear el perfil automáticamente por una restricción en la base de datos. Revisá el campo 'user_type' en la tabla profiles (permitir 'scout' o cambiar el valor antes de crear).");
-              } else if (upsertErr.message?.toLowerCase().includes("permission") || upsertErr.code === "42501") {
-                toast.error("No tenés permisos para crear el perfil automáticamente. Iniciá sesión y completá tu perfil manualmente.");
-              } else {
-                toast.error("No se pudo crear el perfil automáticamente. Completá tu perfil desde el Dashboard después de iniciar sesión.");
-              }
+      try {
+        const userId = (data as any)?.user?.id;
+        if (userId) {
+          const { error: upsertErr } = await supabase.from("profiles").upsert({ id: userId, full_name: fullName, user_type: userType });
+          if (upsertErr) {
+            console.warn("Upsert profile failed:", upsertErr);
+            if (upsertErr.message?.includes("check") || upsertErr.message?.toLowerCase().includes("constraint")) {
+              toast.error("No se pudo crear el perfil automáticamente por una restricción en la base de datos. Revisá el campo 'user_type' en la tabla profiles (permitir 'scout' o cambiar el valor antes de crear).");
+            } else if (upsertErr.message?.toLowerCase().includes("permission") || upsertErr.code === "42501") {
+              toast.error("No tenés permisos para crear el perfil automáticamente. Iniciá sesión y completá tu perfil manualmente.");
+            } else {
+              toast.error("No se pudo crear el perfil automáticamente. Completá tu perfil desde el Dashboard después de iniciar sesión.");
             }
           }
-        } catch (upsertErr) {
-          console.warn("No se pudo crear/actualizar el perfil automáticamente:", upsertErr);
         }
+      } catch (upsertErr) {
+        console.warn("No se pudo crear/actualizar el perfil automáticamente:", upsertErr);
+      }
 
-        // Redirect based on user type
-        if (userType === "club") {
-          navigate("/perfil-club");
-        } else if (userType === "scout") {
-          navigate("/perfil-scout");
-        } else {
-          navigate("/dashboard");
-        }
+      if (userType === "club") {
+        navigate("/perfil-club");
+      } else if (userType === "scout") {
+        navigate("/perfil-scout");
+      } else {
+        navigate("/dashboard");
       }
     } catch (error: any) {
       console.error("Auth error:", error);
       toast.error(error?.message || "Error en la autenticación");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (isLogin) {
+      setLoading(true);
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success("¡Bienvenido de vuelta!");
+        navigate("/dashboard");
+      } catch (error: any) {
+        console.error("Auth error:", error);
+        toast.error(error?.message || "Error en la autenticación");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setShowTerms(true);
     }
   };
 
@@ -221,6 +238,48 @@ const Auth = () => {
           </p>
         </div>
       </div>
+      <AlertDialog open={showTerms} onOpenChange={setShowTerms}>
+        <AlertDialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-display text-foreground">
+              Aviso antes del registro
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogDescription asChild>
+            <div className="space-y-4 text-foreground">
+              <p>
+                Al registrarte en PaseGol aceptás nuestros términos, condiciones y políticas de uso.
+              </p>
+              <p>
+                Los datos personales e información proporcionada por los usuarios serán utilizados únicamente para el funcionamiento de la plataforma, incluyendo la creación de perfiles deportivos, publicación de contenido, contacto entre usuarios, clubes, entrenadores y buscatalentos.
+              </p>
+              <p>
+                PaseGol no vende ni comparte información personal con terceros ajenos al funcionamiento de la plataforma.
+              </p>
+              <p>
+                Cada usuario es responsable del contenido, información, fotos y videos que publica en su perfil. PaseGol no se hace responsable por información falsa, inexacta, ofensiva o publicada por los usuarios.
+              </p>
+              <p>
+                En el caso de menores de edad, el registro y uso de la plataforma debe realizarse con autorización y supervisión de un padre, madre o tutor legal.
+              </p>
+              <p className="font-semibold">
+                Al continuar, confirmás que leíste y aceptás estas condiciones.
+              </p>
+            </div>
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowTerms(false)} className="border-border text-foreground hover:bg-muted">
+              No acepto
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={executeRegister}
+              className="bg-cta-gradient text-navy font-bold hover:opacity-90"
+            >
+              Acepto y continuar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
