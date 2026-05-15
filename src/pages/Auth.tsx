@@ -22,6 +22,8 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [userType, setUserType] = useState<"player" | "club" | "scout">("player");
   const [loading, setLoading] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [pendingSubmit, setPendingSubmit] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
