@@ -40,81 +40,86 @@ const Auth = () => {
     if (mode === "register") setIsLogin(false);
   }, [searchParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const executeRegister = async () => {
+    setShowTerms(false);
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        toast.success("¡Bienvenido de vuelta!");
-        navigate("/dashboard");
-      } else {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            // Send full_name AND user_type so the handle_new_user trigger creates
-            // the profile with the correct role from the start.
-            data: { full_name: fullName, user_type: userType },
-            emailRedirectTo: window.location.origin,
-          },
-        });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName, user_type: userType },
+          emailRedirectTo: window.location.origin,
+        },
+      });
 
-        if (error) {
-          console.error("SignUp error:", error);
-          // Server 500: suggest SMTP / logs check
-          const status = (error as any).status || (error as any).statusCode || null;
-          if (status === 500) {
-            toast.error("Error del servidor al crear la cuenta. Revisá SMTP y los logs en Supabase Dashboard (Authentication → Settings → SMTP / Logs).");
-          } else {
-            toast.error(error.message || "Error al crear la cuenta");
-          }
-          setLoading(false);
-          return;
+      if (error) {
+        console.error("SignUp error:", error);
+        const status = (error as any).status || (error as any).statusCode || null;
+        if (status === 500) {
+          toast.error("Error del servidor al crear la cuenta. Revisá SMTP y los logs en Supabase Dashboard (Authentication → Settings → SMTP / Logs).");
+        } else {
+          toast.error(error.message || "Error al crear la cuenta");
         }
+        setLoading(false);
+        return;
+      }
 
-        toast.success("¡Cuenta creada exitosamente!");
+      toast.success("¡Cuenta creada exitosamente!");
 
-        // If the user object is returned (no email confirmation required), try to create profile row.
-        // Note: some Supabase setups create the `profiles` row server-side on auth signup via triggers.
-        // Sending `user_type` in auth metadata can cause a DB trigger/check constraint to fail
-        // if the server schema doesn't allow that value (e.g., CHECK only permits 'player'|'club').
-        try {
-          const userId = (data as any)?.user?.id;
-          if (userId) {
-            const { error: upsertErr } = await supabase.from("profiles").upsert({ id: userId, full_name: fullName, user_type: userType });
-            if (upsertErr) {
-              console.warn("Upsert profile failed:", upsertErr);
-              // Give the user actionable feedback if RLS or constraint blocked the insert
-              if (upsertErr.message?.includes("check") || upsertErr.message?.toLowerCase().includes("constraint")) {
-                toast.error("No se pudo crear el perfil automáticamente por una restricción en la base de datos. Revisá el campo 'user_type' en la tabla profiles (permitir 'scout' o cambiar el valor antes de crear).");
-              } else if (upsertErr.message?.toLowerCase().includes("permission") || upsertErr.code === "42501") {
-                toast.error("No tenés permisos para crear el perfil automáticamente. Iniciá sesión y completá tu perfil manualmente.");
-              } else {
-                toast.error("No se pudo crear el perfil automáticamente. Completá tu perfil desde el Dashboard después de iniciar sesión.");
-              }
+      try {
+        const userId = (data as any)?.user?.id;
+        if (userId) {
+          const { error: upsertErr } = await supabase.from("profiles").upsert({ id: userId, full_name: fullName, user_type: userType });
+          if (upsertErr) {
+            console.warn("Upsert profile failed:", upsertErr);
+            if (upsertErr.message?.includes("check") || upsertErr.message?.toLowerCase().includes("constraint")) {
+              toast.error("No se pudo crear el perfil automáticamente por una restricción en la base de datos. Revisá el campo 'user_type' en la tabla profiles (permitir 'scout' o cambiar el valor antes de crear).");
+            } else if (upsertErr.message?.toLowerCase().includes("permission") || upsertErr.code === "42501") {
+              toast.error("No tenés permisos para crear el perfil automáticamente. Iniciá sesión y completá tu perfil manualmente.");
+            } else {
+              toast.error("No se pudo crear el perfil automáticamente. Completá tu perfil desde el Dashboard después de iniciar sesión.");
             }
           }
-        } catch (upsertErr) {
-          console.warn("No se pudo crear/actualizar el perfil automáticamente:", upsertErr);
         }
+      } catch (upsertErr) {
+        console.warn("No se pudo crear/actualizar el perfil automáticamente:", upsertErr);
+      }
 
-        // Redirect based on user type
-        if (userType === "club") {
-          navigate("/perfil-club");
-        } else if (userType === "scout") {
-          navigate("/perfil-scout");
-        } else {
-          navigate("/dashboard");
-        }
+      if (userType === "club") {
+        navigate("/perfil-club");
+      } else if (userType === "scout") {
+        navigate("/perfil-scout");
+      } else {
+        navigate("/dashboard");
       }
     } catch (error: any) {
       console.error("Auth error:", error);
       toast.error(error?.message || "Error en la autenticación");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (isLogin) {
+      setLoading(true);
+      try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success("¡Bienvenido de vuelta!");
+        navigate("/dashboard");
+      } catch (error: any) {
+        console.error("Auth error:", error);
+        toast.error(error?.message || "Error en la autenticación");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setShowTerms(true);
     }
   };
 
