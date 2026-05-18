@@ -1,4 +1,5 @@
 import { MapPin, Ruler, Weight } from "lucide-react";
+import { showcaseRotationConfig } from "@/config/showcaseRotation";
 
 type Player = {
   name: string;
