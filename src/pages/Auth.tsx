@@ -23,7 +23,7 @@ const Auth = () => {
   const [userType, setUserType] = useState<"player" | "club" | "scout">("player");
   const [loading, setLoading] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-  const [pendingSubmit, setPendingSubmit] = useState(false);
+  
   const navigate = useNavigate();
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
@@ -245,28 +245,29 @@ const Auth = () => {
               Aviso antes del registro
             </AlertDialogTitle>
           </AlertDialogHeader>
-          <AlertDialogDescription asChild>
-            <div className="space-y-4 text-foreground">
-              <p>
-                Al registrarte en PaseGol aceptás nuestros términos, condiciones y políticas de uso.
-              </p>
-              <p>
-                Los datos personales e información proporcionada por los usuarios serán utilizados únicamente para el funcionamiento de la plataforma, incluyendo la creación de perfiles deportivos, publicación de contenido, contacto entre usuarios, clubes, entrenadores y buscatalentos.
-              </p>
-              <p>
-                PaseGol no vende ni comparte información personal con terceros ajenos al funcionamiento de la plataforma.
-              </p>
-              <p>
-                Cada usuario es responsable del contenido, información, fotos y videos que publica en su perfil. PaseGol no se hace responsable por información falsa, inexacta, ofensiva o publicada por los usuarios.
-              </p>
-              <p>
-                En el caso de menores de edad, el registro y uso de la plataforma debe realizarse con autorización y supervisión de un padre, madre o tutor legal.
-              </p>
-              <p className="font-semibold">
-                Al continuar, confirmás que leíste y aceptás estas condiciones.
-              </p>
-            </div>
+          <AlertDialogDescription className="sr-only">
+            Términos y condiciones de uso de PaseGol
           </AlertDialogDescription>
+          <div className="space-y-4 text-foreground text-sm">
+            <p>
+              Al registrarte en PaseGol aceptás nuestros términos, condiciones y políticas de uso.
+            </p>
+            <p>
+              Los datos personales e información proporcionada por los usuarios serán utilizados únicamente para el funcionamiento de la plataforma, incluyendo la creación de perfiles deportivos, publicación de contenido, contacto entre usuarios, clubes, entrenadores y buscatalentos.
+            </p>
+            <p>
+              PaseGol no vende ni comparte información personal con terceros ajenos al funcionamiento de la plataforma.
+            </p>
+            <p>
+              Cada usuario es responsable del contenido, información, fotos y videos que publica en su perfil. PaseGol no se hace responsable por información falsa, inexacta, ofensiva o publicada por los usuarios.
+            </p>
+            <p>
+              En el caso de menores de edad, el registro y uso de la plataforma debe realizarse con autorización y supervisión de un padre, madre o tutor legal.
+            </p>
+            <p className="font-semibold">
+              Al continuar, confirmás que leíste y aceptás estas condiciones.
+            </p>
+          </div>
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setShowTerms(false)} className="border-border text-foreground hover:bg-muted">
               No acepto
