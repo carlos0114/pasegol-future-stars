@@ -1,4 +1,5 @@
 import { MapPin, Ruler, Weight } from "lucide-react";
+import { showcaseRotationConfig } from "@/config/showcaseRotation";
 
 type Player = {
   name: string;
@@ -26,13 +27,13 @@ const playerPool: Player[] = [
   { name: "Valentín Silva", age: 9, position: "Arquero", city: "Paysandú, UY", height: "1.25m", weight: "32kg", club: "Wanderers" },
 ];
 
-// Fecha de inicio de la rotación (hoy). Cada 7 días avanza al siguiente trío.
-const ROTATION_START = new Date("2026-05-18T00:00:00Z").getTime();
-const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-
+// Configuración (fecha de inicio + intervalo en días) en src/config/showcaseRotation.ts
+// o mediante variables de entorno VITE_SHOWCASE_ROTATION_START / VITE_SHOWCASE_ROTATION_DAYS.
 const getRotatedPlayers = (): Player[] => {
-  const weeksSinceStart = Math.max(0, Math.floor((Date.now() - ROTATION_START) / WEEK_MS));
-  const offset = (weeksSinceStart * 3) % playerPool.length;
+  const { startTimestamp, intervalDays } = showcaseRotationConfig;
+  const periodMs = intervalDays * 24 * 60 * 60 * 1000;
+  const periodsSinceStart = Math.max(0, Math.floor((Date.now() - startTimestamp) / periodMs));
+  const offset = (periodsSinceStart * 3) % playerPool.length;
   return Array.from({ length: 3 }, (_, i) => playerPool[(offset + i) % playerPool.length]);
 };
 
