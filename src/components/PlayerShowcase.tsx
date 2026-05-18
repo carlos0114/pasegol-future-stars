@@ -1,12 +1,43 @@
 import { MapPin, Ruler, Weight } from "lucide-react";
 
-const players = [
+type Player = {
+  name: string;
+  age: number;
+  position: string;
+  city: string;
+  height: string;
+  weight: string;
+  club: string;
+};
+
+// Pool de perfiles. Cada 7 días se rotan 3 distintos automáticamente.
+const playerPool: Player[] = [
   { name: "Ismael Molina", age: 15, position: "Delantero", city: "Montevideo, UY", height: "1.55m", weight: "53.7kg", club: "Tacurú" },
   { name: "Owen Vargas", age: 9, position: "Delantero", city: "Montevideo, UY", height: "1.20m", weight: "40kg", club: "Tacurú" },
   { name: "Filippo Volpe", age: 8, position: "Defensa", city: "Montevideo, UY", height: "1.15m", weight: "35kg", club: "Tacurú" },
+  { name: "Mateo Suárez", age: 12, position: "Mediocampista", city: "Salto, UY", height: "1.45m", weight: "42kg", club: "Peñarol" },
+  { name: "Bruno Acosta", age: 14, position: "Defensa", city: "Buenos Aires, AR", height: "1.62m", weight: "55kg", club: "River Plate" },
+  { name: "Tomás Giménez", age: 10, position: "Arquero", city: "Maldonado, UY", height: "1.38m", weight: "38kg", club: "Defensor" },
+  { name: "Lucas Pereyra", age: 13, position: "Delantero", city: "Rosario, AR", height: "1.50m", weight: "46kg", club: "Newell's" },
+  { name: "Joaquín Méndez", age: 11, position: "Mediocampista", city: "Canelones, UY", height: "1.42m", weight: "40kg", club: "Nacional" },
+  { name: "Santiago Rojas", age: 15, position: "Defensa", city: "Córdoba, AR", height: "1.70m", weight: "60kg", club: "Talleres" },
+  { name: "Benjamín Castro", age: 7, position: "Delantero", city: "Montevideo, UY", height: "1.10m", weight: "28kg", club: "Danubio" },
+  { name: "Thiago Núñez", age: 13, position: "Mediocampista", city: "La Plata, AR", height: "1.52m", weight: "47kg", club: "Estudiantes" },
+  { name: "Valentín Silva", age: 9, position: "Arquero", city: "Paysandú, UY", height: "1.25m", weight: "32kg", club: "Wanderers" },
 ];
 
+// Fecha de inicio de la rotación (hoy). Cada 7 días avanza al siguiente trío.
+const ROTATION_START = new Date("2026-05-18T00:00:00Z").getTime();
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+const getRotatedPlayers = (): Player[] => {
+  const weeksSinceStart = Math.max(0, Math.floor((Date.now() - ROTATION_START) / WEEK_MS));
+  const offset = (weeksSinceStart * 3) % playerPool.length;
+  return Array.from({ length: 3 }, (_, i) => playerPool[(offset + i) % playerPool.length]);
+};
+
 const PlayerShowcase = () => {
+  const players = getRotatedPlayers();
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
