@@ -26,6 +26,7 @@ const CreatePlayer = () => {
     speed: 50, technique: 50, game_vision: 50, finishing: 50, endurance: 50,
     parent_name: "", parent_email: "", parent_phone: "",
     native_language: "", other_languages: "", eu_passport: false,
+    representation_status: "prefiero_no_informar", representative_name: "",
   });
 
   useEffect(() => {
@@ -71,6 +72,8 @@ const CreatePlayer = () => {
         native_language: data.native_language ?? "",
         other_languages: (data.other_languages ?? []).join(", "),
         eu_passport: data.eu_passport ?? false,
+        representation_status: data.representation_status ?? "prefiero_no_informar",
+        representative_name: data.representative_name ?? "",
       });
       setLoadingData(false);
     };
@@ -117,6 +120,8 @@ const CreatePlayer = () => {
         ? form.other_languages.split(",").map((s) => s.trim()).filter(Boolean)
         : [],
       eu_passport: form.eu_passport,
+      representation_status: form.representation_status,
+      representative_name: form.representation_status === "tengo" ? (form.representative_name || null) : null,
     };
 
     const { error } = isEdit
