@@ -204,6 +204,12 @@ const Explore = () => {
                       {p.weight && <div className="flex items-center gap-1.5 text-sm text-muted-foreground"><Weight size={14} /> {p.weight}</div>}
                     </div>
                     {p.club && <div className="text-sm font-medium text-foreground">{p.club}</div>}
+                    {p.representation_status === "buscando" && (
+                      <span className="inline-block px-2.5 py-0.5 rounded-full bg-lime/20 text-lime text-[11px] font-semibold">Busca representante</span>
+                    )}
+                    {p.representation_status === "tengo" && (
+                      <span className="inline-block px-2.5 py-0.5 rounded-full bg-gold/20 text-accent text-[11px] font-semibold">Con representante</span>
+                    )}
                     <Link
                       to={`/jugador/${p.id}`}
                       className="block w-full mt-4 py-2.5 rounded-xl bg-cta-gradient text-navy font-semibold text-sm text-center hover:opacity-90"
