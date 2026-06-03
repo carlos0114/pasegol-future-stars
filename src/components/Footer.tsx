@@ -140,11 +140,26 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-semibold text-primary-foreground mb-4 font-body uppercase tracking-wider">Legal</h4>
             <ul className="space-y-2.5">
-              {["Términos de Uso", "Política de Privacidad", "Protección de Menores", "Cookies"].map((l) => (
+              {["Términos de Uso", "Política de Privacidad"].map((l) => (
                 <li key={l}>
                   <a href="#" className="text-sm text-primary-foreground/50 hover:text-lime transition-colors font-body">{l}</a>
                 </li>
               ))}
+              <li>
+                <ChildProtectionDialog
+                  trigger={
+                    <button
+                      type="button"
+                      className="text-sm text-primary-foreground/50 hover:text-lime transition-colors font-body text-left"
+                    >
+                      Protección de Menores
+                    </button>
+                  }
+                />
+              </li>
+              <li>
+                <a href="#" className="text-sm text-primary-foreground/50 hover:text-lime transition-colors font-body">Cookies</a>
+              </li>
             </ul>
           </div>
         </div>
