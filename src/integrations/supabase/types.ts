@@ -302,6 +302,8 @@ export type Database = {
           position: string
           preferred_foot: string | null
           profile_id: string
+          representation_status: string
+          representative_name: string | null
           secondary_position: string | null
           speed: number | null
           technique: number | null
@@ -334,6 +336,8 @@ export type Database = {
           position: string
           preferred_foot?: string | null
           profile_id: string
+          representation_status?: string
+          representative_name?: string | null
           secondary_position?: string | null
           speed?: number | null
           technique?: number | null
@@ -366,6 +370,8 @@ export type Database = {
           position?: string
           preferred_foot?: string | null
           profile_id?: string
+          representation_status?: string
+          representative_name?: string | null
           secondary_position?: string | null
           speed?: number | null
           technique?: number | null
