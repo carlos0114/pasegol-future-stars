@@ -39,6 +39,8 @@ interface Player {
   native_language: string | null;
   other_languages: string[] | null;
   eu_passport: boolean | null;
+  representation_status: string | null;
+  representative_name: string | null;
 }
 
 interface Profile {
@@ -435,6 +437,31 @@ const PlayerProfile = () => {
                 </div>
               )}
             </div>
+
+            {/* Representation status */}
+            {player.representation_status && (
+              <div className="bg-card rounded-2xl border border-border p-5">
+                <h3 className="text-lg font-display text-foreground mb-4 flex items-center gap-2">
+                  <User size={18} className="text-lime" /> SITUACIÓN DE REPRESENTACIÓN
+                </h3>
+                <div className="flex flex-wrap items-center gap-2">
+                  {player.representation_status === "buscando" && (
+                    <span className="px-3 py-1.5 rounded-full bg-lime/20 text-lime text-sm font-semibold">Buscando representante</span>
+                  )}
+                  {player.representation_status === "tengo" && (
+                    <>
+                      <span className="px-3 py-1.5 rounded-full bg-gold/20 text-accent text-sm font-semibold">Ya tiene representante</span>
+                      {player.representative_name && (
+                        <span className="text-sm text-muted-foreground">• {player.representative_name}</span>
+                      )}
+                    </>
+                  )}
+                  {player.representation_status === "prefiero_no_informar" && (
+                    <span className="px-3 py-1.5 rounded-full bg-muted text-muted-foreground text-sm font-semibold">Prefiere no informar</span>
+                  )}
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           {/* SKILLS TAB */}

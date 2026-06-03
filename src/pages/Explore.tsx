@@ -14,6 +14,8 @@ interface Player {
   weight: string | null;
   club: string | null;
   photo_url: string | null;
+  representation_status: string | null;
+  representative_name: string | null;
 }
 
 interface Scout {
@@ -42,6 +44,7 @@ const Explore = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [posFilter, setPosFilter] = useState("");
+  const [repFilter, setRepFilter] = useState("");
   const [userType, setUserType] = useState<string | null>(null);
 
   useEffect(() => {
@@ -82,7 +85,8 @@ const Explore = () => {
   const filtered = players.filter((p) => {
     const matchesSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || (p.city?.toLowerCase().includes(search.toLowerCase()));
     const matchesPos = !posFilter || p.position === posFilter;
-    return matchesSearch && matchesPos;
+    const matchesRep = !repFilter || p.representation_status === repFilter;
+    return matchesSearch && matchesPos && matchesRep;
   });
 
   const filteredScouts = scouts.filter((s) => {
@@ -136,17 +140,29 @@ const Explore = () => {
             />
           </div>
           {tab === "players" && (
-            <select
-              value={posFilter}
-              onChange={(e) => setPosFilter(e.target.value)}
-              className="px-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-lime outline-none"
-            >
-              <option value="">Todas las posiciones</option>
-              <option value="Portero">Portero</option>
-              <option value="Defensa">Defensa</option>
-              <option value="Mediocampista">Mediocampista</option>
-              <option value="Delantero">Delantero</option>
-            </select>
+            <>
+              <select
+                value={posFilter}
+                onChange={(e) => setPosFilter(e.target.value)}
+                className="px-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-lime outline-none"
+              >
+                <option value="">Todas las posiciones</option>
+                <option value="Portero">Portero</option>
+                <option value="Defensa">Defensa</option>
+                <option value="Mediocampista">Mediocampista</option>
+                <option value="Delantero">Delantero</option>
+              </select>
+              <select
+                value={repFilter}
+                onChange={(e) => setRepFilter(e.target.value)}
+                className="px-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-lime outline-none"
+              >
+                <option value="">Toda representación</option>
+                <option value="buscando">Buscando representante</option>
+                <option value="tengo">Ya tiene representante</option>
+                <option value="prefiero_no_informar">Prefiere no informar</option>
+              </select>
+            </>
           )}
         </div>
 
