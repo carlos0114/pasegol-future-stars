@@ -49,6 +49,58 @@ const ContactEmailDialog = ({ trigger }: { trigger: React.ReactNode }) => {
   );
 };
 
+const ChildProtectionDialog = ({ trigger }: { trigger: React.ReactNode }) => (
+  <Dialog>
+    <DialogTrigger asChild>{trigger}</DialogTrigger>
+    <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogHeader>
+        <DialogTitle className="font-display tracking-wider">Protección de Menores</DialogTitle>
+        <DialogDescription>
+          Declaración de Estándares Contra la Explotación y Abuso Sexual Infantil (EASI)
+        </DialogDescription>
+      </DialogHeader>
+      <div className="space-y-4 text-sm text-foreground font-body leading-relaxed">
+        <p>
+          PASEGOL se compromete fehacientemente a desarrollar un espacio seguro y protegido para todos los usuarios, especialmente para los menores de edad. Proteger a los menores de cualquier explotación y abuso sexual es nuestro principal objetivo. PASEGOL es un espacio donde puedan interactuar de manera segura y positiva.
+        </p>
+
+        <div>
+          <h4 className="font-semibold text-base mb-2">Principios Fundamentales</h4>
+          <ul className="space-y-2 list-disc pl-5">
+            <li><strong>Educación:</strong> Promovemos la educación y la concienciación sobre los riesgos de la explotación y el abuso sexual infantil entre nuestros usuarios y empleados. Creemos que un usuario bien informado es la mejor defensa contra el abuso.</li>
+            <li><strong>Seguridad y Protección Infantil:</strong> La seguridad de los niños es nuestra máxima prioridad. Implementamos medidas para prevenir y detectar cualquier actividad que ponga en riesgo a los menores.</li>
+            <li><strong>Tolerancia Cero:</strong> Adoptamos una política de tolerancia cero hacia cualquier forma de explotación y abuso sexual infantil. Cualquier comportamiento sospechoso será investigado y abordado de inmediato.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-base mb-2">Responsabilidades de los Usuarios</h4>
+          <ul className="space-y-2 list-disc pl-5">
+            <li><strong>Uso Responsable:</strong> Todos los usuarios de PASEGOL deben utilizar la plataforma de manera responsable y respetar los derechos y la dignidad de los demás.</li>
+            <li><strong>Denuncia de Incidentes:</strong> Instamos a nuestros usuarios a denunciar cualquier contenido o comportamiento sospechoso a través de nuestras herramientas de reporte. La colaboración de la comunidad es esencial para mantener un entorno seguro.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-base mb-2">Compromisos de PASEGOL</h4>
+          <ul className="space-y-2 list-disc pl-5">
+            <li><strong>Detección y Prevención:</strong> Utilizamos tecnologías avanzadas para monitorear y detectar cualquier contenido o comportamiento inapropiado. Contamos con un equipo especializado en seguridad que actúa rápidamente ante cualquier incidente.</li>
+            <li><strong>Colaboración con Autoridades:</strong> Trabajamos en colaboración con autoridades y organizaciones especializadas en la protección infantil para garantizar una respuesta efectiva ante cualquier caso de abuso o explotación.</li>
+            <li><strong>Apoyo a las Víctimas:</strong> Brindamos apoyo y recursos a las víctimas de explotación y abuso sexual infantil. Facilitamos el acceso a servicios de asistencia y orientación para garantizar su bienestar y recuperación.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-base mb-2">Evaluación y Mejora Continua</h4>
+          <p>
+            Nos comprometemos a revisar y mejorar continuamente nuestras políticas y procedimientos para garantizar que estamos a la vanguardia en la lucha contra la explotación y el abuso sexual infantil. Escuchamos a nuestra comunidad y adoptamos las mejores prácticas para ofrecer un entorno seguro y confiable.
+          </p>
+        </div>
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
 const Footer = () => {
   return (
     <footer className="bg-navy border-t border-primary/10 py-16">
