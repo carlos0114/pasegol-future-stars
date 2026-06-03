@@ -31,7 +31,7 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-primary-foreground/70 max-w-xl mb-10 font-body animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            Conectamos jóvenes futbolistas de 5 a 15 años con clubes y cazatalentos de todo el mundo. Crea tu perfil profesional y sé descubierto.
+            Tu camino hacia nuevas oportunidades comienza aquí. PaseGol conecta futbolistas, familias, clubes, academias, representantes y captadores de talento en un entorno seguro y profesional.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
