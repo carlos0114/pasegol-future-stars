@@ -314,6 +314,40 @@ const CreatePlayer = () => {
             </div>
           </section>
 
+          {/* Representation */}
+          <section>
+            <h2 className="text-lg font-display text-foreground mb-4 border-b border-border pb-2">SITUACIÓN DE REPRESENTACIÓN</h2>
+            <div className="space-y-4">
+              <div>
+                <label className={labelClass}>Estado actual</label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {[
+                    { v: "buscando", l: "Buscando representante" },
+                    { v: "tengo", l: "Ya tengo representante" },
+                    { v: "prefiero_no_informar", l: "Prefiero no informar" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.v}
+                      type="button"
+                      onClick={() => setForm((p) => ({ ...p, representation_status: opt.v }))}
+                      className={`py-2.5 px-3 rounded-xl border text-sm font-semibold transition-colors ${form.representation_status === opt.v ? "bg-lime/20 text-lime border-lime" : "bg-card text-muted-foreground border-border hover:text-foreground"}`}
+                    >
+                      {opt.l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {form.representation_status === "tengo" && (
+                <div>
+                  <label className={labelClass}>Nombre del representante o empresa (opcional)</label>
+                  <input name="representative_name" value={form.representative_name} onChange={handleChange} className={inputClass} placeholder="Ej: Juan Pérez / Agencia XYZ" />
+                </div>
+              )}
+            </div>
+          </section>
+
+
+
           <button type="submit" disabled={submitting}
             className="w-full py-3.5 rounded-xl bg-cta-gradient text-navy font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50">
             {submitting ? (isEdit ? "Guardando..." : "Creando...") : (isEdit ? "Guardar Cambios" : "Crear Jugador")}
