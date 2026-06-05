@@ -47,6 +47,11 @@ const CreatePlayer = () => {
         navigate("/dashboard");
         return;
       }
+      const { data: contact } = await supabase
+        .from("player_parent_contacts")
+        .select("parent_name, parent_email, parent_phone")
+        .eq("player_id", editId)
+        .maybeSingle();
       setForm({
         name: data.name ?? "",
         age: data.age?.toString() ?? "",
@@ -66,9 +71,9 @@ const CreatePlayer = () => {
         game_vision: data.game_vision ?? 50,
         finishing: data.finishing ?? 50,
         endurance: data.endurance ?? 50,
-        parent_name: data.parent_name ?? "",
-        parent_email: data.parent_email ?? "",
-        parent_phone: data.parent_phone ?? "",
+        parent_name: contact?.parent_name ?? "",
+        parent_email: contact?.parent_email ?? "",
+        parent_phone: contact?.parent_phone ?? "",
         native_language: data.native_language ?? "",
         other_languages: (data.other_languages ?? []).join(", "),
         eu_passport: data.eu_passport ?? false,
