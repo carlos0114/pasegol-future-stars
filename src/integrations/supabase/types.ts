@@ -277,6 +277,41 @@ export type Database = {
           },
         ]
       }
+      player_parent_contacts: {
+        Row: {
+          created_at: string
+          parent_email: string | null
+          parent_name: string | null
+          parent_phone: string | null
+          player_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          parent_email?: string | null
+          parent_name?: string | null
+          parent_phone?: string | null
+          player_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          parent_email?: string | null
+          parent_name?: string | null
+          parent_phone?: string | null
+          player_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_parent_contacts_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: true
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           achievements: string | null
@@ -295,9 +330,6 @@ export type Database = {
           name: string
           native_language: string | null
           other_languages: string[] | null
-          parent_email: string | null
-          parent_name: string | null
-          parent_phone: string | null
           photo_url: string | null
           position: string
           preferred_foot: string | null
@@ -329,9 +361,6 @@ export type Database = {
           name: string
           native_language?: string | null
           other_languages?: string[] | null
-          parent_email?: string | null
-          parent_name?: string | null
-          parent_phone?: string | null
           photo_url?: string | null
           position: string
           preferred_foot?: string | null
@@ -363,9 +392,6 @@ export type Database = {
           name?: string
           native_language?: string | null
           other_languages?: string[] | null
-          parent_email?: string | null
-          parent_name?: string | null
-          parent_phone?: string | null
           photo_url?: string | null
           position?: string
           preferred_foot?: string | null
@@ -430,13 +456,11 @@ export type Database = {
           previous_clubs: string[] | null
           professional_id: string | null
           profile_id: string
-          references_info: string | null
           target_age_max: number | null
           target_age_min: number | null
           target_countries: string[] | null
           target_positions: string[] | null
           updated_at: string
-          verification_doc_url: string | null
           verification_status: string
           years_experience: number | null
         }
@@ -452,13 +476,11 @@ export type Database = {
           previous_clubs?: string[] | null
           professional_id?: string | null
           profile_id: string
-          references_info?: string | null
           target_age_max?: number | null
           target_age_min?: number | null
           target_countries?: string[] | null
           target_positions?: string[] | null
           updated_at?: string
-          verification_doc_url?: string | null
           verification_status?: string
           years_experience?: number | null
         }
@@ -474,17 +496,47 @@ export type Database = {
           previous_clubs?: string[] | null
           professional_id?: string | null
           profile_id?: string
-          references_info?: string | null
           target_age_max?: number | null
           target_age_min?: number | null
           target_countries?: string[] | null
           target_positions?: string[] | null
           updated_at?: string
-          verification_doc_url?: string | null
           verification_status?: string
           years_experience?: number | null
         }
         Relationships: []
+      }
+      scouts_private: {
+        Row: {
+          created_at: string
+          references_info: string | null
+          scout_id: string
+          updated_at: string
+          verification_doc_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          references_info?: string | null
+          scout_id: string
+          updated_at?: string
+          verification_doc_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          references_info?: string | null
+          scout_id?: string
+          updated_at?: string
+          verification_doc_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scouts_private_scout_id_fkey"
+            columns: ["scout_id"]
+            isOneToOne: true
+            referencedRelation: "scouts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
