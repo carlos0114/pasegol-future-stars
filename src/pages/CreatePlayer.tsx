@@ -179,11 +179,11 @@ const CreatePlayer = () => {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 <div>
                   <label className={labelClass}>Edad *</label>
-                  <input name="age" type="number" min="5" max="15" value={form.age} onChange={handleChange} required className={inputClass} placeholder="5-15" />
+                  <input name="age" type="number" min="1" value={form.age} onChange={handleChange} required className={inputClass} placeholder="Ej: 18" />
                 </div>
                 <div>
                   <label className={labelClass}>Año nacimiento</label>
-                  <input name="birth_year" type="number" min="2010" max="2021" value={form.birth_year} onChange={handleChange} className={inputClass} placeholder="2015" />
+                  <input name="birth_year" type="number" value={form.birth_year} onChange={handleChange} className={inputClass} placeholder="Ej: 2005" />
                 </div>
                 <div>
                   <label className={labelClass}>Pierna hábil</label>
