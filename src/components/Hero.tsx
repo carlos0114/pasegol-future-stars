@@ -21,7 +21,7 @@ const Hero = () => {
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime/10 border border-lime/20 mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
             <Play size={14} className="text-lime" />
-            <span className="text-sm font-medium text-lime">La plataforma #1 de scouting juvenil</span>
+            <span className="text-sm font-medium text-lime">La plataforma #1 de búsqueda de talentos juveniles</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display leading-[0.95] text-primary-foreground mb-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
