@@ -240,7 +240,7 @@ const CreatePlayer = () => {
                 </div>
                 <div>
                   <label className={labelClass}>Años jugando</label>
-                  <input name="years_playing" type="number" min="0" max="15" value={form.years_playing} onChange={handleChange} className={inputClass} placeholder="3" />
+                  <input name="years_playing" type="number" min="0" value={form.years_playing} onChange={handleChange} className={inputClass} placeholder="3" />
                 </div>
               </div>
               <div>
