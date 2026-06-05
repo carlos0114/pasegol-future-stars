@@ -47,6 +47,11 @@ const CreatePlayer = () => {
         navigate("/dashboard");
         return;
       }
+      const { data: contact } = await supabase
+        .from("player_parent_contacts")
+        .select("parent_name, parent_email, parent_phone")
+        .eq("player_id", editId)
+        .maybeSingle();
       setForm({
         name: data.name ?? "",
         age: data.age?.toString() ?? "",
@@ -66,9 +71,9 @@ const CreatePlayer = () => {
         game_vision: data.game_vision ?? 50,
         finishing: data.finishing ?? 50,
         endurance: data.endurance ?? 50,
-        parent_name: data.parent_name ?? "",
-        parent_email: data.parent_email ?? "",
-        parent_phone: data.parent_phone ?? "",
+        parent_name: contact?.parent_name ?? "",
+        parent_email: contact?.parent_email ?? "",
+        parent_phone: contact?.parent_phone ?? "",
         native_language: data.native_language ?? "",
         other_languages: (data.other_languages ?? []).join(", "),
         eu_passport: data.eu_passport ?? false,
@@ -112,9 +117,6 @@ const CreatePlayer = () => {
       game_vision: form.game_vision,
       finishing: form.finishing,
       endurance: form.endurance,
-      parent_name: form.parent_name || null,
-      parent_email: form.parent_email || null,
-      parent_phone: form.parent_phone || null,
       native_language: form.native_language || null,
       other_languages: form.other_languages
         ? form.other_languages.split(",").map((s) => s.trim()).filter(Boolean)
@@ -124,15 +126,43 @@ const CreatePlayer = () => {
       representative_name: form.representation_status === "tengo" ? (form.representative_name || null) : null,
     };
 
-    const { error } = isEdit
-      ? await supabase.from("players").update(payload).eq("id", editId!)
-      : await supabase.from("players").insert({ ...payload, profile_id: user.id });
-
-    if (error) toast.error((isEdit ? "Error al actualizar: " : "Error al crear el perfil: ") + error.message);
-    else {
-      toast.success(isEdit ? "¡Cambios guardados!" : "¡Jugador creado con éxito!");
-      navigate(isEdit ? `/jugador/${editId}` : "/dashboard");
+    let playerId = editId;
+    let opError;
+    if (isEdit) {
+      const { error } = await supabase.from("players").update(payload).eq("id", editId!);
+      opError = error;
+    } else {
+      const { data: inserted, error } = await supabase
+        .from("players")
+        .insert({ ...payload, profile_id: user.id })
+        .select("id")
+        .single();
+      opError = error;
+      if (inserted) playerId = inserted.id;
     }
+
+    if (opError) {
+      toast.error((isEdit ? "Error al actualizar: " : "Error al crear el perfil: ") + opError.message);
+      setSubmitting(false);
+      return;
+    }
+
+    if (playerId) {
+      const hasContact = form.parent_name || form.parent_email || form.parent_phone;
+      if (hasContact) {
+        await supabase.from("player_parent_contacts").upsert({
+          player_id: playerId,
+          parent_name: form.parent_name || null,
+          parent_email: form.parent_email || null,
+          parent_phone: form.parent_phone || null,
+        }, { onConflict: "player_id" });
+      } else if (isEdit) {
+        await supabase.from("player_parent_contacts").delete().eq("player_id", playerId);
+      }
+    }
+
+    toast.success(isEdit ? "¡Cambios guardados!" : "¡Jugador creado con éxito!");
+    navigate(isEdit ? `/jugador/${editId}` : "/dashboard");
     setSubmitting(false);
   };
 

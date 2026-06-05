@@ -98,7 +98,19 @@ const PlayerProfile = () => {
   const fetchPlayer = useCallback(async () => {
     if (!id) return;
     const { data } = await supabase.from("players").select("*").eq("id", id!).maybeSingle();
-    if (data) setPlayer(data as Player);
+    if (data) {
+      const { data: contact } = await supabase
+        .from("player_parent_contacts")
+        .select("parent_name, parent_email, parent_phone")
+        .eq("player_id", id!)
+        .maybeSingle();
+      setPlayer({
+        ...(data as object),
+        parent_name: contact?.parent_name ?? null,
+        parent_email: contact?.parent_email ?? null,
+        parent_phone: contact?.parent_phone ?? null,
+      } as Player);
+    }
     setLoading(false);
   }, [id]);
 

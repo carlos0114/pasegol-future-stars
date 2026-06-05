@@ -40,8 +40,13 @@ const CreateScoutProfile = () => {
 
   useEffect(() => {
     if (existingScout) {
-      supabase.from("scouts").select("*").eq("id", existingScout).single().then(({ data }) => {
+      supabase.from("scouts").select("*").eq("id", existingScout).single().then(async ({ data }) => {
         if (data) {
+          const { data: priv } = await supabase
+            .from("scouts_private")
+            .select("references_info")
+            .eq("scout_id", existingScout)
+            .maybeSingle();
           setForm({
             full_name: data.full_name || "",
             professional_id: data.professional_id || "",
@@ -50,7 +55,7 @@ const CreateScoutProfile = () => {
             years_experience: data.years_experience?.toString() || "",
             previous_clubs: (data.previous_clubs || []).join(", "),
             player_type_sought: data.player_type_sought || "",
-            references_info: data.references_info || "",
+            references_info: priv?.references_info || "",
             target_age_min: data.target_age_min?.toString() || "5",
             target_age_max: data.target_age_max?.toString() || "15",
             target_positions: data.target_positions || [],
@@ -86,7 +91,6 @@ const CreateScoutProfile = () => {
       years_experience: form.years_experience ? parseInt(form.years_experience) : null,
       previous_clubs: form.previous_clubs ? form.previous_clubs.split(",").map((s) => s.trim()).filter(Boolean) : [],
       player_type_sought: form.player_type_sought || null,
-      references_info: form.references_info || null,
       target_age_min: parseInt(form.target_age_min) || 5,
       target_age_max: parseInt(form.target_age_max) || 15,
       target_positions: form.target_positions,
@@ -94,18 +98,34 @@ const CreateScoutProfile = () => {
     };
 
     let error;
+    let scoutId = existingScout;
     if (existingScout) {
       ({ error } = await supabase.from("scouts").update(payload).eq("id", existingScout));
     } else {
-      ({ error } = await supabase.from("scouts").insert(payload));
+      const { data: inserted, error: insErr } = await supabase.from("scouts").insert(payload).select("id").single();
+      error = insErr;
+      if (inserted) scoutId = inserted.id;
     }
 
     if (error) {
       toast.error("Error: " + error.message);
-    } else {
-      toast.success(existingScout ? "Perfil actualizado" : "Perfil de scout creado");
-      navigate("/dashboard");
+      setSubmitting(false);
+      return;
     }
+
+    if (scoutId) {
+      if (form.references_info) {
+        await supabase.from("scouts_private").upsert({
+          scout_id: scoutId,
+          references_info: form.references_info,
+        }, { onConflict: "scout_id" });
+      } else if (existingScout) {
+        await supabase.from("scouts_private").update({ references_info: null }).eq("scout_id", scoutId);
+      }
+    }
+
+    toast.success(existingScout ? "Perfil actualizado" : "Perfil de scout creado");
+    navigate("/dashboard");
     setSubmitting(false);
   };
 
