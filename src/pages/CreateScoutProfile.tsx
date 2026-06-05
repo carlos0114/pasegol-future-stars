@@ -40,8 +40,13 @@ const CreateScoutProfile = () => {
 
   useEffect(() => {
     if (existingScout) {
-      supabase.from("scouts").select("*").eq("id", existingScout).single().then(({ data }) => {
+      supabase.from("scouts").select("*").eq("id", existingScout).single().then(async ({ data }) => {
         if (data) {
+          const { data: priv } = await supabase
+            .from("scouts_private")
+            .select("references_info")
+            .eq("scout_id", existingScout)
+            .maybeSingle();
           setForm({
             full_name: data.full_name || "",
             professional_id: data.professional_id || "",
@@ -50,7 +55,7 @@ const CreateScoutProfile = () => {
             years_experience: data.years_experience?.toString() || "",
             previous_clubs: (data.previous_clubs || []).join(", "),
             player_type_sought: data.player_type_sought || "",
-            references_info: data.references_info || "",
+            references_info: priv?.references_info || "",
             target_age_min: data.target_age_min?.toString() || "5",
             target_age_max: data.target_age_max?.toString() || "15",
             target_positions: data.target_positions || [],
