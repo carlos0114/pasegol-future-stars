@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Plus, GripVertical, ExternalLink, Shield, Mail } from "lucide-react";
+import ActivityDashboard from "@/components/admin/ActivityDashboard";
 
 interface ContactMessage {
   id: string;
@@ -187,6 +188,11 @@ const Admin = () => {
         <div className="flex items-center gap-3 mb-8">
           <Shield className="h-8 w-8 text-primary" />
           <h1 className="text-3xl font-display text-foreground">Panel de Administración</h1>
+        </div>
+
+        {/* Activity dashboard: stats + recent registrations + recent videos */}
+        <div className="mb-8">
+          <ActivityDashboard />
         </div>
 
         {/* Ad Banners Management */}
