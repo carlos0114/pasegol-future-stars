@@ -3,7 +3,16 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+
+type Competition = {
+  name: string;
+  year: string;
+  team: string;
+  category: string;
+  description: string;
+};
+const emptyCompetition = (): Competition => ({ name: "", year: "", team: "", category: "", description: "" });
 import { Slider } from "@/components/ui/slider";
 
 const positions = ["Portero", "Defensa", "Mediocampista", "Delantero"];
