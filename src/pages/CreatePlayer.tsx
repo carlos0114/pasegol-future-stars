@@ -36,6 +36,7 @@ const CreatePlayer = () => {
     parent_name: "", parent_email: "", parent_phone: "",
     native_language: "", other_languages: "", eu_passport: false,
     representation_status: "prefiero_no_informar", representative_name: "",
+    competitions: [] as Competition[],
   });
 
   useEffect(() => {
