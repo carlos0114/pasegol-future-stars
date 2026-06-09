@@ -190,6 +190,11 @@ const Admin = () => {
           <h1 className="text-3xl font-display text-foreground">Panel de Administración</h1>
         </div>
 
+        {/* Activity dashboard: stats + recent registrations + recent videos */}
+        <div className="mb-8">
+          <ActivityDashboard />
+        </div>
+
         {/* Ad Banners Management */}
         <div className="bg-card border border-border rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
