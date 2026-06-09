@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Plus, GripVertical, ExternalLink, Shield, Mail } from "lucide-react";
+import ActivityDashboard from "@/components/admin/ActivityDashboard";
 
 interface ContactMessage {
   id: string;
