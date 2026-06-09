@@ -3,7 +3,16 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+
+type Competition = {
+  name: string;
+  year: string;
+  team: string;
+  category: string;
+  description: string;
+};
+const emptyCompetition = (): Competition => ({ name: "", year: "", team: "", category: "", description: "" });
 import { Slider } from "@/components/ui/slider";
 
 const positions = ["Portero", "Defensa", "Mediocampista", "Delantero"];
@@ -27,6 +36,7 @@ const CreatePlayer = () => {
     parent_name: "", parent_email: "", parent_phone: "",
     native_language: "", other_languages: "", eu_passport: false,
     representation_status: "prefiero_no_informar", representative_name: "",
+    competitions: [] as Competition[],
   });
 
   useEffect(() => {
@@ -79,6 +89,7 @@ const CreatePlayer = () => {
         eu_passport: data.eu_passport ?? false,
         representation_status: data.representation_status ?? "prefiero_no_informar",
         representative_name: data.representative_name ?? "",
+        competitions: Array.isArray((data as any).competitions) ? (data as any).competitions as Competition[] : [],
       });
       setLoadingData(false);
     };
@@ -124,7 +135,8 @@ const CreatePlayer = () => {
       eu_passport: form.eu_passport,
       representation_status: form.representation_status,
       representative_name: form.representation_status === "tengo" ? (form.representative_name || null) : null,
-    };
+      competitions: form.competitions.filter((c) => c.name.trim() || c.year.trim() || c.team.trim() || c.category.trim() || c.description.trim()),
+    } as any;
 
     let playerId = editId;
     let opError;
@@ -277,6 +289,87 @@ const CreatePlayer = () => {
                 <label className={labelClass}>Logros o campeonatos</label>
                 <textarea name="achievements" value={form.achievements} onChange={handleChange} className={`${inputClass} resize-none h-20`} placeholder="Ej: Campeón Liga Infantil 2025, Mejor jugador del torneo..." />
               </div>
+
+              {/* Competitions */}
+              <div className="space-y-3 pt-2">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Ligas, Campeonatos o Torneos Anteriores</h3>
+                  <p className="text-xs text-muted-foreground">Sumá las competiciones en las que participaste para mostrar tu experiencia.</p>
+                </div>
+                {form.competitions.length === 0 && (
+                  <p className="text-xs text-muted-foreground italic">Todavía no agregaste ninguna competición.</p>
+                )}
+                {form.competitions.map((c, idx) => (
+                  <div key={idx} className="bg-card border border-border rounded-xl p-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold text-muted-foreground">Competición #{idx + 1}</span>
+                      <button
+                        type="button"
+                        onClick={() => setForm((p) => ({ ...p, competitions: p.competitions.filter((_, i) => i !== idx) }))}
+                        className="text-destructive hover:opacity-80 p-1"
+                        aria-label="Eliminar competición"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className={labelClass}>Nombre de la liga / torneo</label>
+                        <input
+                          value={c.name}
+                          onChange={(e) => setForm((p) => ({ ...p, competitions: p.competitions.map((it, i) => i === idx ? { ...it, name: e.target.value } : it) }))}
+                          className={inputClass}
+                          placeholder="Ej: Liga Infantil AFA"
+                        />
+                      </div>
+                      <div>
+                        <label className={labelClass}>Año o temporada</label>
+                        <input
+                          value={c.year}
+                          onChange={(e) => setForm((p) => ({ ...p, competitions: p.competitions.map((it, i) => i === idx ? { ...it, year: e.target.value } : it) }))}
+                          className={inputClass}
+                          placeholder="Ej: 2024 / 2024-2025"
+                        />
+                      </div>
+                      <div>
+                        <label className={labelClass}>Club o equipo representado</label>
+                        <input
+                          value={c.team}
+                          onChange={(e) => setForm((p) => ({ ...p, competitions: p.competitions.map((it, i) => i === idx ? { ...it, team: e.target.value } : it) }))}
+                          className={inputClass}
+                          placeholder="Ej: River Plate Inf."
+                        />
+                      </div>
+                      <div>
+                        <label className={labelClass}>Categoría o división</label>
+                        <input
+                          value={c.category}
+                          onChange={(e) => setForm((p) => ({ ...p, competitions: p.competitions.map((it, i) => i === idx ? { ...it, category: e.target.value } : it) }))}
+                          className={inputClass}
+                          placeholder="Ej: Sub-13"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className={labelClass}>Descripción / logros (opcional)</label>
+                      <textarea
+                        value={c.description}
+                        onChange={(e) => setForm((p) => ({ ...p, competitions: p.competitions.map((it, i) => i === idx ? { ...it, description: e.target.value } : it) }))}
+                        className={`${inputClass} resize-none h-20`}
+                        placeholder="Ej: Goleador del torneo, llegamos a la final..."
+                      />
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setForm((p) => ({ ...p, competitions: [...p.competitions, emptyCompetition()] }))}
+                  className="w-full py-2.5 rounded-xl border border-dashed border-lime/40 text-lime text-sm font-semibold hover:bg-lime/10 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus size={16} /> Agregar otra competición
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className={labelClass}>Idioma nativo</label>

@@ -382,6 +382,7 @@ export type Database = {
           category: string | null
           city: string | null
           club: string | null
+          competitions: Json
           created_at: string
           endurance: number | null
           eu_passport: boolean
@@ -413,6 +414,7 @@ export type Database = {
           category?: string | null
           city?: string | null
           club?: string | null
+          competitions?: Json
           created_at?: string
           endurance?: number | null
           eu_passport?: boolean
@@ -444,6 +446,7 @@ export type Database = {
           category?: string | null
           city?: string | null
           club?: string | null
+          competitions?: Json
           created_at?: string
           endurance?: number | null
           eu_passport?: boolean
