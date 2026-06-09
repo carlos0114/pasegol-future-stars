@@ -89,6 +89,7 @@ const CreatePlayer = () => {
         eu_passport: data.eu_passport ?? false,
         representation_status: data.representation_status ?? "prefiero_no_informar",
         representative_name: data.representative_name ?? "",
+        competitions: Array.isArray((data as any).competitions) ? (data as any).competitions as Competition[] : [],
       });
       setLoadingData(false);
     };
