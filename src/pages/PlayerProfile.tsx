@@ -449,6 +449,30 @@ const PlayerProfile = () => {
                   <p className="text-sm text-foreground whitespace-pre-line">{player.achievements}</p>
                 </div>
               )}
+              {Array.isArray(player.competitions) && player.competitions.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1">
+                    <Trophy size={12} className="text-accent" /> Ligas, campeonatos o torneos anteriores
+                  </p>
+                  <div className="space-y-3">
+                    {player.competitions.map((c, i) => (
+                      <div key={i} className="p-4 rounded-xl bg-card border border-border">
+                        <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                          <h4 className="text-sm font-semibold text-foreground">{c.name || "Sin nombre"}</h4>
+                          {c.year && <span className="text-xs text-muted-foreground">{c.year}</span>}
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                          {c.team && <span><Shield size={11} className="inline mr-1" />{c.team}</span>}
+                          {c.category && <span><Star size={11} className="inline mr-1" />{c.category}</span>}
+                        </div>
+                        {c.description && (
+                          <p className="text-sm text-foreground mt-2 whitespace-pre-line">{c.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Representation status */}
