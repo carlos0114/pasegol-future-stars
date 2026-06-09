@@ -41,6 +41,7 @@ interface Player {
   eu_passport: boolean | null;
   representation_status: string | null;
   representative_name: string | null;
+  competitions: Array<{ name?: string; year?: string; team?: string; category?: string; description?: string }> | null;
 }
 
 interface Profile {
