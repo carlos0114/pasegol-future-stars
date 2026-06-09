@@ -83,6 +83,68 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_notifications: {
+        Row: {
+          account_type: string | null
+          actor_email: string | null
+          actor_name: string | null
+          actor_profile_id: string | null
+          country: string | null
+          created_at: string
+          email_sent: boolean
+          email_sent_at: string | null
+          id: string
+          message: string | null
+          metadata: Json
+          target_id: string | null
+          target_url: string | null
+          type: Database["public"]["Enums"]["admin_notification_type"]
+          video_url: string | null
+        }
+        Insert: {
+          account_type?: string | null
+          actor_email?: string | null
+          actor_name?: string | null
+          actor_profile_id?: string | null
+          country?: string | null
+          created_at?: string
+          email_sent?: boolean
+          email_sent_at?: string | null
+          id?: string
+          message?: string | null
+          metadata?: Json
+          target_id?: string | null
+          target_url?: string | null
+          type: Database["public"]["Enums"]["admin_notification_type"]
+          video_url?: string | null
+        }
+        Update: {
+          account_type?: string | null
+          actor_email?: string | null
+          actor_name?: string | null
+          actor_profile_id?: string | null
+          country?: string | null
+          created_at?: string
+          email_sent?: boolean
+          email_sent_at?: string | null
+          id?: string
+          message?: string | null
+          metadata?: Json
+          target_id?: string | null
+          target_url?: string | null
+          type?: Database["public"]["Enums"]["admin_notification_type"]
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_notifications_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_scouts: {
         Row: {
           club_id: string
@@ -572,6 +634,12 @@ export type Database = {
       is_player_owner: { Args: { _player_id: string }; Returns: boolean }
     }
     Enums: {
+      admin_notification_type:
+        | "new_player"
+        | "new_club"
+        | "new_scout"
+        | "new_video"
+        | "new_contact_request"
       app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
@@ -700,6 +768,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_notification_type: [
+        "new_player",
+        "new_club",
+        "new_scout",
+        "new_video",
+        "new_contact_request",
+      ],
       app_role: ["admin", "moderator", "user"],
     },
   },
