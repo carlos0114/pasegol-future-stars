@@ -135,7 +135,8 @@ const CreatePlayer = () => {
       eu_passport: form.eu_passport,
       representation_status: form.representation_status,
       representative_name: form.representation_status === "tengo" ? (form.representative_name || null) : null,
-    };
+      competitions: form.competitions.filter((c) => c.name.trim() || c.year.trim() || c.team.trim() || c.category.trim() || c.description.trim()),
+    } as any;
 
     let playerId = editId;
     let opError;
