@@ -239,16 +239,18 @@ const Auth = () => {
             onClick={async () => {
               setLoading(true);
               try {
-                const result = await lovable.auth.signInWithOAuth("google", {
-                  redirect_uri: window.location.origin + "/dashboard",
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: "google",
+                  options: {
+                    redirectTo: `${window.location.origin}/dashboard`,
+                  },
                 });
-                if (result.error) {
-                  toast.error(result.error.message || "Error al iniciar sesión con Google");
+                if (error) {
+                  toast.error(error.message || "Error al iniciar sesión con Google");
                   setLoading(false);
                   return;
                 }
-                if (result.redirected) return;
-                navigate("/dashboard");
+                // Browser will redirect to Google
               } catch (err: any) {
                 toast.error(err?.message || "Error al iniciar sesión con Google");
                 setLoading(false);
