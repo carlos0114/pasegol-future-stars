@@ -14,6 +14,7 @@ import PlayerProfile from "./pages/PlayerProfile";
 import Explore from "./pages/Explore";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <AnalyticsTracker />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />

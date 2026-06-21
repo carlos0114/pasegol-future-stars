@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -67,6 +68,7 @@ const Auth = () => {
       }
 
       toast.success("¡Cuenta creada exitosamente!");
+      trackEvent("sign_up", { method: "email", user_type: userType });
 
       try {
         const userId = (data as any)?.user?.id;
@@ -111,6 +113,7 @@ const Auth = () => {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("¡Bienvenido de vuelta!");
+        trackEvent("login", { method: "email" });
         navigate("/dashboard");
       } catch (error: any) {
         console.error("Auth error:", error);
@@ -238,6 +241,7 @@ const Auth = () => {
             disabled={loading}
             onClick={async () => {
               setLoading(true);
+              trackEvent("login", { method: "google" });
               try {
                 const { error } = await supabase.auth.signInWithOAuth({
                   provider: "google",

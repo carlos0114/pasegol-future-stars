@@ -7,6 +7,7 @@ import {
   Calendar, Footprints, Shield, Trophy, Clock, Star, Play, Image, Mail, Phone, User, Languages, Pencil
 } from "lucide-react";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -111,6 +112,11 @@ const PlayerProfile = () => {
         parent_email: contact?.parent_email ?? null,
         parent_phone: contact?.parent_phone ?? null,
       } as Player);
+      trackEvent("player_profile_view", {
+        player_id: data.id,
+        player_name: data.name,
+        position: data.position,
+      });
     }
     setLoading(false);
   }, [id]);
@@ -537,6 +543,10 @@ const PlayerProfile = () => {
                       controlsList="nodownload novolume"
                       disableRemotePlayback
                       className="w-full max-h-[400px] rounded-xl bg-muted object-contain"
+                      onPlay={() => trackEvent("player_video_play", {
+                        player_id: player.id,
+                        player_name: player.name,
+                      })}
                       onVolumeChange={(e) => {
                         const v = e.currentTarget;
                         if (!v.muted) v.muted = true;
