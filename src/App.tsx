@@ -13,6 +13,7 @@ import CreateScoutProfile from "./pages/CreateScoutProfile";
 import PlayerProfile from "./pages/PlayerProfile";
 import Explore from "./pages/Explore";
 import Admin from "./pages/Admin";
+import Move from "./pages/Move";
 import NotFound from "./pages/NotFound";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 
@@ -37,7 +38,10 @@ const App = () => (
             <Route path="/jugador/:id" element={<PlayerProfile />} />
             <Route path="/explorar" element={<Explore />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/move" element={<Move />} />
+            <Route path="/movimiento-pasegol" element={<Move />} />
             <Route path="*" element={<NotFound />} />
+
           </Routes>
         </AuthProvider>
       </BrowserRouter>

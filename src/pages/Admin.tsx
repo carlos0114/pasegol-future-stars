@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Plus, GripVertical, ExternalLink, Shield, Mail } from "lucide-react";
 import ActivityDashboard from "@/components/admin/ActivityDashboard";
+import MovementSupporters from "@/components/admin/MovementSupporters";
 
 interface ContactMessage {
   id: string;
@@ -194,6 +195,12 @@ const Admin = () => {
         <div className="mb-8">
           <ActivityDashboard />
         </div>
+
+        {/* Movement supporters */}
+        <div className="mb-8">
+          <MovementSupporters />
+        </div>
+
 
         {/* Ad Banners Management */}
         <div className="bg-card border border-border rounded-xl p-6">
