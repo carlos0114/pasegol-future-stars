@@ -339,6 +339,24 @@ export type Database = {
           },
         ]
       }
+      movement_supporters: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       player_parent_contacts: {
         Row: {
           created_at: string
@@ -626,6 +644,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_movement_supporters_count: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
