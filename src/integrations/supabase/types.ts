@@ -645,6 +645,10 @@ export type Database = {
     }
     Functions: {
       get_movement_supporters_count: { Args: never; Returns: number }
+      has_club_or_scout_profile: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
