@@ -645,6 +645,93 @@ export type Database = {
     }
     Functions: {
       get_movement_supporters_count: { Args: never; Returns: number }
+      get_public_player: {
+        Args: { _player_id: string }
+        Returns: {
+          achievements: string
+          age: number
+          birth_year: number
+          category: string
+          city: string
+          club: string
+          competitions: Json
+          created_at: string
+          endurance: number
+          eu_passport: boolean
+          finishing: number
+          game_vision: number
+          height: string
+          id: string
+          name: string
+          native_language: string
+          other_languages: string[]
+          photo_url: string
+          position: string
+          preferred_foot: string
+          profile_id: string
+          representation_status: string
+          representative_name: string
+          secondary_position: string
+          speed: number
+          technique: number
+          video_url: string
+          weight: string
+          years_playing: number
+        }[]
+      }
+      get_public_players: {
+        Args: never
+        Returns: {
+          achievements: string
+          age: number
+          birth_year: number
+          category: string
+          city: string
+          club: string
+          competitions: Json
+          created_at: string
+          endurance: number
+          eu_passport: boolean
+          finishing: number
+          game_vision: number
+          height: string
+          id: string
+          name: string
+          native_language: string
+          other_languages: string[]
+          photo_url: string
+          position: string
+          preferred_foot: string
+          profile_id: string
+          representation_status: string
+          representative_name: string
+          secondary_position: string
+          speed: number
+          technique: number
+          video_url: string
+          weight: string
+          years_playing: number
+        }[]
+      }
+      get_public_scouts: {
+        Args: never
+        Returns: {
+          city: string
+          country: string
+          created_at: string
+          full_name: string
+          id: string
+          photo_url: string
+          player_type_sought: string
+          previous_clubs: string[]
+          target_age_max: number
+          target_age_min: number
+          target_countries: string[]
+          target_positions: string[]
+          verification_status: string
+          years_experience: number
+        }[]
+      }
       has_club_or_scout_profile: {
         Args: { _user_id: string }
         Returns: boolean
