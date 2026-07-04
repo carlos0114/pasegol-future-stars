@@ -14,6 +14,8 @@ interface Player {
   weight: string | null;
   club: string | null;
   photo_url: string | null;
+  video_url?: string | null;
+  profile_id?: string | null;
   representation_status: string | null;
   representative_name: string | null;
 }
@@ -31,7 +33,6 @@ interface Scout {
   target_countries: string[] | null;
   player_type_sought: string | null;
   previous_clubs: string[] | null;
-  professional_id: string | null;
   verification_status: string;
 }
 
@@ -68,17 +69,36 @@ const Explore = () => {
 
   const fetchUserType = async () => {
     const { data } = await supabase.from("profiles").select("user_type").eq("id", user!.id).maybeSingle();
+    if (data?.user_type === "club") {
+      setUserType("club");
+      return;
+    }
+
+    const { data: club } = await supabase.from("clubs").select("id").eq("profile_id", user!.id).maybeSingle();
+    if (club) {
+      setUserType("club");
+      return;
+    }
+
+    const { data: scout } = await supabase.from("scouts").select("id").eq("profile_id", user!.id).maybeSingle();
+    if (scout || data?.user_type === "scout") {
+      setUserType("scout");
+      return;
+    }
+
     if (data) setUserType(data.user_type);
   };
 
   const fetchPlayers = async () => {
-    const { data } = await supabase.from("players").select("*").order("created_at", { ascending: true });
+    const { data, error } = await supabase.rpc("get_public_players");
+    if (error) console.error("Error cargando jugadores públicos:", error);
     if (data) setPlayers(data);
     setLoading(false);
   };
 
   const fetchScouts = async () => {
-    const { data } = await supabase.from("scouts").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase.rpc("get_public_scouts");
+    if (error) console.error("Error cargando cazatalentos públicos:", error);
     if (data) setScouts(data as Scout[]);
   };
 

@@ -99,23 +99,25 @@ const PlayerProfile = () => {
 
   const fetchPlayer = useCallback(async () => {
     if (!id) return;
-    const { data } = await supabase.from("players").select("*").eq("id", id!).maybeSingle();
-    if (data) {
+    const { data, error } = await supabase.rpc("get_public_player", { _player_id: id });
+    if (error) console.error("Error cargando perfil público del jugador:", error);
+    const publicPlayer = Array.isArray(data) ? data[0] : null;
+    if (publicPlayer) {
       const { data: contact } = await supabase
         .from("player_parent_contacts")
         .select("parent_name, parent_email, parent_phone")
         .eq("player_id", id!)
         .maybeSingle();
       setPlayer({
-        ...(data as object),
+        ...(publicPlayer as object),
         parent_name: contact?.parent_name ?? null,
         parent_email: contact?.parent_email ?? null,
         parent_phone: contact?.parent_phone ?? null,
       } as Player);
       trackEvent("player_profile_view", {
-        player_id: data.id,
-        player_name: data.name,
-        position: data.position,
+        player_id: publicPlayer.id,
+        player_name: publicPlayer.name,
+        position: publicPlayer.position,
       });
     }
     setLoading(false);
@@ -269,7 +271,7 @@ const PlayerProfile = () => {
   };
 
   const sendContactRequest = async () => {
-    if (!user || !player || !message.trim() || !player.profile_id) {
+    if (!user || !player || !message.trim()) {
       toast.error("No se puede enviar el mensaje en este momento");
       return;
     }
