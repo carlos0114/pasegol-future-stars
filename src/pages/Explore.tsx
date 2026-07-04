@@ -69,6 +69,23 @@ const Explore = () => {
 
   const fetchUserType = async () => {
     const { data } = await supabase.from("profiles").select("user_type").eq("id", user!.id).maybeSingle();
+    if (data?.user_type === "club") {
+      setUserType("club");
+      return;
+    }
+
+    const { data: club } = await supabase.from("clubs").select("id").eq("profile_id", user!.id).maybeSingle();
+    if (club) {
+      setUserType("club");
+      return;
+    }
+
+    const { data: scout } = await supabase.from("scouts").select("id").eq("profile_id", user!.id).maybeSingle();
+    if (scout || data?.user_type === "scout") {
+      setUserType("scout");
+      return;
+    }
+
     if (data) setUserType(data.user_type);
   };
 
