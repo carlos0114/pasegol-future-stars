@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public.get_movement_supporters_count() TO anon, authenticated;
