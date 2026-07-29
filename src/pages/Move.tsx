@@ -24,8 +24,11 @@ const Move = () => {
   const [joined, setJoined] = useState(false);
 
   const loadCount = async () => {
-    const { data, error } = await supabase.rpc("get_movement_supporters_count");
-    if (!error && data !== null) setCount(Number(data));
+    const { data, error } = await supabase
+      .from("movement_stats")
+      .select("supporters_count")
+      .maybeSingle();
+    if (!error && data) setCount(Number(data.supporters_count));
   };
 
   useEffect(() => {
