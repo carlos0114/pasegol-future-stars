@@ -339,6 +339,24 @@ export type Database = {
           },
         ]
       }
+      movement_stats: {
+        Row: {
+          id: boolean
+          supporters_count: number
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          supporters_count?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          supporters_count?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       movement_supporters: {
         Row: {
           created_at: string
