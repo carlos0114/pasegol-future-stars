@@ -565,10 +565,17 @@ const PlayerProfile = () => {
                       controlsList="nodownload novolume"
                       disableRemotePlayback
                       className="w-full max-h-[400px] rounded-xl bg-muted object-contain"
-                      onPlay={() => trackEvent("player_video_play", {
-                        player_id: player.id,
-                        player_name: player.name,
-                      })}
+                      onPlay={() => {
+                        trackEvent("player_video_play", {
+                          player_id: player.id,
+                          player_name: player.name,
+                        });
+                        if (!isOwner && !videoViewLogged.current) {
+                          videoViewLogged.current = true;
+                          logProfileEvent("video_view", player.id);
+                        }
+                      }}
+
                       onVolumeChange={(e) => {
                         const v = e.currentTarget;
                         if (!v.muted) v.muted = true;
