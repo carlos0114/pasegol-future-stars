@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProfileMetrics from "@/components/ProfileMetrics";
+
 
 interface Player {
   id: string;
@@ -94,8 +96,26 @@ const PlayerProfile = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [senderProfile, setSenderProfile] = useState<Profile | null>(null);
+  const [metricsRefresh, setMetricsRefresh] = useState(0);
+  const videoViewLogged = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
+
+  // Registra una interacción del perfil (vista de video / clic en contactar)
+  const logProfileEvent = useCallback(
+    async (eventType: "video_view" | "contact_click", playerId: string) => {
+      if (!user) return;
+      const { error } = await (supabase as any).from("player_profile_events").insert({
+        player_id: playerId,
+        event_type: eventType,
+        viewer_profile_id: user.id,
+      });
+      if (error) console.warn("No se pudo registrar la métrica:", error.message);
+      else setMetricsRefresh((n) => n + 1);
+    },
+    [user]
+  );
+
 
   const fetchPlayer = useCallback(async () => {
     if (!id) return;
@@ -276,11 +296,13 @@ const PlayerProfile = () => {
       return;
     }
     setSending(true);
+    await logProfileEvent("contact_click", player.id);
     const { error } = await supabase.from("contact_requests").insert({
       sender_profile_id: user.id,
       player_id: player.id,
       message: message.trim(),
     });
+
     if (error) {
       console.error("Error al enviar:", error);
       toast.error("Error al enviar mensaje: " + error.message);
@@ -545,10 +567,17 @@ const PlayerProfile = () => {
                       controlsList="nodownload novolume"
                       disableRemotePlayback
                       className="w-full max-h-[400px] rounded-xl bg-muted object-contain"
-                      onPlay={() => trackEvent("player_video_play", {
-                        player_id: player.id,
-                        player_name: player.name,
-                      })}
+                      onPlay={() => {
+                        trackEvent("player_video_play", {
+                          player_id: player.id,
+                          player_name: player.name,
+                        });
+                        if (!isOwner && !videoViewLogged.current) {
+                          videoViewLogged.current = true;
+                          logProfileEvent("video_view", player.id);
+                        }
+                      }}
+
                       onVolumeChange={(e) => {
                         const v = e.currentTarget;
                         if (!v.muted) v.muted = true;
@@ -593,6 +622,14 @@ const PlayerProfile = () => {
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Métricas del perfil: visibles para el jugador dueño y para clubes / cazatalentos */}
+        {user && (isOwner || canContact) && (
+          <div className="mt-6">
+            <ProfileMetrics playerId={player.id} refreshKey={metricsRefresh} />
+          </div>
+        )}
+
 
         {/* Contact section - for clubs and scouts */}
         {user && !isOwner && canContact && (
