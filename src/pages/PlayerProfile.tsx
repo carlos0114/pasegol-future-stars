@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProfileMetrics from "@/components/ProfileMetrics";
+
 
 interface Player {
   id: string;
