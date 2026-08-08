@@ -410,6 +410,38 @@ export type Database = {
           },
         ]
       }
+      player_profile_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          player_id: string
+          viewer_profile_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          player_id: string
+          viewer_profile_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          player_id?: string
+          viewer_profile_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_profile_events_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           achievements: string | null
@@ -663,6 +695,14 @@ export type Database = {
     }
     Functions: {
       get_movement_supporters_count: { Args: never; Returns: number }
+      get_player_metrics: {
+        Args: { _player_id: string }
+        Returns: {
+          contact_clicks: number
+          saves: number
+          video_views: number
+        }[]
+      }
       get_public_player: {
         Args: { _player_id: string }
         Returns: {
