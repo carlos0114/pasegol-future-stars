@@ -296,11 +296,13 @@ const PlayerProfile = () => {
       return;
     }
     setSending(true);
+    await logProfileEvent("contact_click", player.id);
     const { error } = await supabase.from("contact_requests").insert({
       sender_profile_id: user.id,
       player_id: player.id,
       message: message.trim(),
     });
+
     if (error) {
       console.error("Error al enviar:", error);
       toast.error("Error al enviar mensaje: " + error.message);
