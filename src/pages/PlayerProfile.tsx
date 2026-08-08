@@ -614,6 +614,14 @@ const PlayerProfile = () => {
           </TabsContent>
         </Tabs>
 
+        {/* Métricas del perfil: visibles para el jugador dueño y para clubes / cazatalentos */}
+        {user && (isOwner || canContact) && (
+          <div className="mt-6">
+            <ProfileMetrics playerId={player.id} refreshKey={metricsRefresh} />
+          </div>
+        )}
+
+
         {/* Contact section - for clubs and scouts */}
         {user && !isOwner && canContact && (
           <div className="mt-6 space-y-4">
