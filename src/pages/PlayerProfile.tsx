@@ -96,8 +96,26 @@ const PlayerProfile = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [senderProfile, setSenderProfile] = useState<Profile | null>(null);
+  const [metricsRefresh, setMetricsRefresh] = useState(0);
+  const videoViewLogged = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
+
+  // Registra una interacción del perfil (vista de video / clic en contactar)
+  const logProfileEvent = useCallback(
+    async (eventType: "video_view" | "contact_click", playerId: string) => {
+      if (!user) return;
+      const { error } = await (supabase as any).from("player_profile_events").insert({
+        player_id: playerId,
+        event_type: eventType,
+        viewer_profile_id: user.id,
+      });
+      if (error) console.warn("No se pudo registrar la métrica:", error.message);
+      else setMetricsRefresh((n) => n + 1);
+    },
+    [user]
+  );
+
 
   const fetchPlayer = useCallback(async () => {
     if (!id) return;
