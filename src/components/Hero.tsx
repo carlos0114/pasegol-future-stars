@@ -25,13 +25,13 @@ const Hero = () => {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display leading-[0.95] text-primary-foreground mb-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            ¿TIENES TALENTO<br />
-            PERO NADIE<br />
-            <span className="text-gradient-lime">TE DESCUBRE?</span>
+            CREÁ TU HISTORIAL<br />
+            DE FÚTBOL EN<br />
+            <span className="text-gradient-lime">PASEGOL</span>
           </h1>
 
           <p className="text-lg md:text-xl text-primary-foreground/70 max-w-xl mb-10 font-body animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            Tu camino hacia nuevas oportunidades comienza aquí. PaseGol conecta futbolistas, familias, clubes, academias, representantes y captadores de talento en un entorno seguro y profesional.
+            Tu trayectoria, tus videos, tus logros y tu fútbol, todo en un solo lugar.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
