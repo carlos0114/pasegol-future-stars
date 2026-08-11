@@ -145,6 +145,71 @@ export type Database = {
           },
         ]
       }
+      analytics_events: {
+        Row: {
+          actor_profile_id: string | null
+          actor_user_type: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          event_name: Database["public"]["Enums"]["analytics_event"]
+          id: string
+          metadata: Json
+          path: string | null
+          referrer: string | null
+          session_id: string | null
+          target_id: string | null
+          target_type: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          actor_profile_id?: string | null
+          actor_user_type?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          event_name: Database["public"]["Enums"]["analytics_event"]
+          id?: string
+          metadata?: Json
+          path?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          actor_profile_id?: string | null
+          actor_user_type?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          event_name?: Database["public"]["Enums"]["analytics_event"]
+          id?: string
+          metadata?: Json
+          path?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_scouts: {
         Row: {
           club_id: string
@@ -464,10 +529,12 @@ export type Database = {
           photo_url: string | null
           position: string
           preferred_foot: string | null
+          profile_completed_at: string | null
           profile_id: string
           representation_status: string
           representative_name: string | null
           secondary_position: string | null
+          seeking_opportunities: boolean
           speed: number | null
           technique: number | null
           updated_at: string
@@ -496,10 +563,12 @@ export type Database = {
           photo_url?: string | null
           position: string
           preferred_foot?: string | null
+          profile_completed_at?: string | null
           profile_id: string
           representation_status?: string
           representative_name?: string | null
           secondary_position?: string | null
+          seeking_opportunities?: boolean
           speed?: number | null
           technique?: number | null
           updated_at?: string
@@ -528,10 +597,12 @@ export type Database = {
           photo_url?: string | null
           position?: string
           preferred_foot?: string | null
+          profile_completed_at?: string | null
           profile_id?: string
           representation_status?: string
           representative_name?: string | null
           secondary_position?: string | null
+          seeking_opportunities?: boolean
           speed?: number | null
           technique?: number | null
           updated_at?: string
@@ -691,7 +762,35 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      analytics_daily_events: {
+        Row: {
+          actor_user_type: string | null
+          day: string | null
+          event_name: Database["public"]["Enums"]["analytics_event"] | null
+          total: number | null
+          unique_actors: number | null
+        }
+        Relationships: []
+      }
+      analytics_daily_signups: {
+        Row: {
+          day: string | null
+          signups: number | null
+          user_type: string | null
+        }
+        Relationships: []
+      }
+      analytics_funnel_registro: {
+        Row: {
+          con_foto: number | null
+          con_perfil_jugador: number | null
+          con_video: number | null
+          cuentas: number | null
+          perfil_completado: number | null
+          user_type: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_movement_supporters_count: { Args: never; Returns: number }
@@ -812,6 +911,25 @@ export type Database = {
         | "new_scout"
         | "new_video"
         | "new_contact_request"
+      analytics_event:
+        | "user_signup"
+        | "user_login"
+        | "profile_created"
+        | "profile_completed"
+        | "photo_uploaded"
+        | "video_uploaded"
+        | "video_view"
+        | "player_profile_view"
+        | "scout_profile_view"
+        | "club_profile_view"
+        | "scout_registered"
+        | "club_registered"
+        | "contact_made"
+        | "seeking_opportunities"
+        | "movement_joined"
+        | "search_performed"
+        | "banner_impression"
+        | "banner_click"
       app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
@@ -946,6 +1064,26 @@ export const Constants = {
         "new_scout",
         "new_video",
         "new_contact_request",
+      ],
+      analytics_event: [
+        "user_signup",
+        "user_login",
+        "profile_created",
+        "profile_completed",
+        "photo_uploaded",
+        "video_uploaded",
+        "video_view",
+        "player_profile_view",
+        "scout_profile_view",
+        "club_profile_view",
+        "scout_registered",
+        "club_registered",
+        "contact_made",
+        "seeking_opportunities",
+        "movement_joined",
+        "search_performed",
+        "banner_impression",
+        "banner_click",
       ],
       app_role: ["admin", "moderator", "user"],
     },
