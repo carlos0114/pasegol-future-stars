@@ -8,7 +8,7 @@
 //   (no se aceptan por parámetro), evitando suplantación.
 
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+import type { Database, Json } from "@/integrations/supabase/types";
 
 export type AnalyticsEventName = Database["public"]["Enums"]["analytics_event"];
 
