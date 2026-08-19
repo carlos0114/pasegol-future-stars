@@ -218,7 +218,7 @@ export const logEvent = async (
       utm_campaign: utm.utm_campaign,
       target_type: options.targetType ?? null,
       target_id: options.targetId ?? null,
-      metadata: sanitizeMetadata(options.metadata),
+      metadata: sanitizeMetadata(options.metadata) as Json,
     });
 
     if (error) {
