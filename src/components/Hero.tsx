@@ -30,7 +30,7 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-primary-foreground/70 max-w-xl mb-10 font-body animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            Tu trayectoria, tus videos, tus logros y tu fútbol, todo en un solo lugar.
+            Tu historial deportivo digital, desde tus primeros pasos hasta oportunidades con clubes y cazatalentos.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
