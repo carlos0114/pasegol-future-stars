@@ -19,7 +19,7 @@ const CTASection = () => {
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/auth?mode=register" className="group px-8 py-4 rounded-xl bg-cta-gradient text-navy font-bold text-lg hover:opacity-90 transition-all animate-pulse-glow flex items-center justify-center gap-2">
-              Crear Perfil Gratis
+              Creá tu historia gratis
               <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </a>
             <a href="/auth?mode=register&type=club" className="px-8 py-4 rounded-xl border-2 border-gold/30 text-gold font-semibold text-lg hover:border-gold/50 hover:bg-gold/5 transition-all">

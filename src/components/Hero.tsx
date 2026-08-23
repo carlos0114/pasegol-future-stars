@@ -35,7 +35,7 @@ const Hero = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: "0.6s" }}>
             <a href="/auth?mode=register" className="group px-8 py-4 rounded-xl bg-cta-gradient text-navy font-bold text-lg hover:opacity-90 transition-all animate-pulse-glow flex items-center justify-center gap-2">
-              Crear Perfil Gratis
+              Creá tu historia gratis
               <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </a>
             <a href="/auth?mode=register&type=club" className="px-8 py-4 rounded-xl border-2 border-primary-foreground/20 text-primary-foreground font-semibold text-lg hover:border-primary-foreground/40 hover:bg-primary-foreground/5 transition-all flex items-center justify-center gap-2">
